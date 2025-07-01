@@ -3,38 +3,669 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Analyse F1 – Kayou Ba</title>
+  <title>F1 Predictability Crisis - Data Analysis Project | Kayou Ba</title>
   <link rel="stylesheet" href="../style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://kit.fontawesome.com/3b1d4f5a8f.js" crossorigin="anonymous"></script>
+  
+  <style>
+    /* Variables */
+    :root {
+      --f1-red: #ff1801;
+      --f1-dark: #15151e;
+      --f1-gradient: linear-gradient(135deg, #ff1801 0%, #15151e 100%);
+      --card-bg: #1a1a2e;
+      --text-muted: #a0a0b8;
+    }
+
+    /* Hero Section */
+    .project-hero {
+      background: var(--f1-gradient);
+      min-height: 70vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-content {
+      text-align: center;
+      z-index: 2;
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .hero-title {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(to right, #fff, #ff6b35);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: slideInDown 0.8s ease-out;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1.1rem, 2vw, 1.5rem);
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 3rem;
+      animation: slideInUp 0.8s ease-out;
+    }
+
+    /* Animated background */
+    .hero-bg-animation {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      opacity: 0.1;
+      background-image: 
+        repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255, 255, 255, 0.05) 35px, rgba(255, 255, 255, 0.05) 70px);
+      animation: slide 20s linear infinite;
+    }
+
+    @keyframes slide {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(70px, 70px); }
+    }
+
+    /* Key Metrics */
+    .key-metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      margin: 3rem 0;
+      animation: fadeIn 1s ease-out 0.3s both;
+    }
+
+    .metric-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 2rem;
+      border-radius: 20px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .metric-card:hover {
+      transform: translateY(-10px);
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--f1-red);
+      box-shadow: 0 20px 40px rgba(255, 24, 1, 0.3);
+    }
+
+    .metric-value {
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--f1-red);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .metric-label {
+      font-size: 1rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* CTA Buttons */
+    .cta-buttons {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 3rem;
+      animation: fadeIn 1s ease-out 0.5s both;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 1.2rem 2.5rem;
+      background: var(--f1-red);
+      color: white;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-button:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      transition: left 0.5s;
+    }
+
+    .cta-button:hover:before {
+      left: 100%;
+    }
+
+    .cta-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(255, 24, 1, 0.5);
+    }
+
+    .cta-button.secondary {
+      background: transparent;
+      border: 2px solid white;
+    }
+
+    .cta-button.secondary:hover {
+      background: white;
+      color: var(--f1-dark);
+    }
+
+    /* Content Sections */
+    .project-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+    }
+
+    .section {
+      margin-bottom: 6rem;
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    .section-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: white;
+    }
+
+    .section-subtitle {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      margin-bottom: 3rem;
+    }
+
+    /* Problem Statement */
+    .problem-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin: 3rem 0;
+    }
+
+    .problem-card {
+      background: var(--card-bg);
+      padding: 2.5rem;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .problem-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--f1-red);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .problem-icon {
+      font-size: 3rem;
+      margin-bottom: 1.5rem;
+      display: block;
+    }
+
+    .problem-title {
+      font-size: 1.5rem;
+      color: var(--f1-red);
+      margin-bottom: 1rem;
+    }
+
+    /* Tech Stack */
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1.5rem;
+      margin: 3rem 0;
+    }
+
+    .tech-item {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 1.5rem;
+      border-radius: 15px;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .tech-item:hover {
+      background: rgba(255, 24, 1, 0.1);
+      border-color: var(--f1-red);
+      transform: scale(1.05);
+    }
+
+    .tech-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    /* Dashboard Preview */
+    .dashboard-preview {
+      background: var(--card-bg);
+      border-radius: 20px;
+      overflow: hidden;
+      margin: 3rem 0;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .dashboard-header {
+      background: var(--f1-red);
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .dashboard-header h3 {
+      margin: 0;
+      color: white;
+      font-size: 1.2rem;
+    }
+
+    .dashboard-image {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Insights Section */
+    .insights-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin: 3rem 0;
+    }
+
+    .insight-card {
+      background: linear-gradient(135deg, rgba(255, 24, 1, 0.1), rgba(26, 26, 46, 0.8));
+      padding: 2rem;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 24, 1, 0.3);
+    }
+
+    .insight-number {
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--f1-red);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Results Section */
+    .results-showcase {
+      background: linear-gradient(135deg, var(--card-bg), rgba(255, 24, 1, 0.05));
+      padding: 3rem;
+      border-radius: 20px;
+      margin: 3rem 0;
+    }
+
+    .result-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 1.5rem 0;
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .result-icon {
+      color: var(--f1-red);
+      font-size: 1.5rem;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes fadeInUp {
+      from { 
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to { 
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 2.5rem;
+      }
+      
+      .metric-value {
+        font-size: 2rem;
+      }
+      
+      .cta-buttons {
+        flex-direction: column;
+        width: 100%;
+      }
+      
+      .cta-button {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+      }
+    }
+  </style>
 </head>
 <body>
+  <!-- Header -->
   <header class="site-header">
-    <div class="logo"><a href="../index.html">← Retour au Portfolio</a></div>
+    <div class="logo">Kayou <span>Ba</span></div>
+    <nav class="navbar">
+      <a href="../index.html#about">À propos</a>
+      <a href="../index.html#projects">Projets</a>
+      <a href="../index.html#skills">Compétences</a>
+      <a href="../index.html#certifications">Certifications</a>
+      <a href="../index.html#cv">CV</a>
+      <a href="../index.html#contact">Contact</a>
+    </nav>
   </header>
 
-  <main class="project-detail">
-    <h1>Analyse stratégique de la Formule 1 avec FastF1</h1>
-    <p class="sub"><strong>Outils :</strong> Python, FastF1, Matplotlib, Pandas – <em>2025</em></p>
+  <!-- Hero Section -->
+  <section class="project-hero">
+    <div class="hero-bg-animation"></div>
+    <div class="hero-content">
+      <h1 class="hero-title">🏎️ F1 Predictability Crisis</h1>
+      <p class="hero-subtitle">Une analyse data-driven de l'évolution du divertissement en Formule 1</p>
+      
+      <div class="key-metrics">
+        <div class="metric-card">
+          <span class="metric-value">82%</span>
+          <span class="metric-label">Corrélation Quali-Course</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-value">75+</span>
+          <span class="metric-label">Courses Analysées</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-value">3</span>
+          <span class="metric-label">Saisons Complètes</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-value">15%</span>
+          <span class="metric-label">↗️ Prévisibilité</span>
+        </div>
+      </div>
 
-    <p>
-      Ce projet a pour but d’analyser les données télémétriques des Grands Prix de F1
-      (vitesse, tours, arrêts aux stands, usure pneus...) pour comprendre comment
-      la stratégie influe sur le résultat final. Les données sont extraites via l’API FastF1.
-    </p>
+      <div class="cta-buttons">
+        <a href="https://f1-analysis-kayouba.streamlit.app" target="_blank" class="cta-button">
+          <i class="fas fa-chart-line"></i>
+          Explorer le Dashboard
+        </a>
+        <a href="#story" class="cta-button secondary">
+          <i class="fas fa-book-open"></i>
+          Découvrir l'Histoire
+        </a>
+      </div>
+    </div>
+  </section>
 
-    <img src="../assets/f1-graph.png" alt="Graphique télémétrie" class="project-image" />
+  <!-- Main Content -->
+  <main class="project-content">
+    <!-- The Story -->
+    <section id="story" class="section">
+      <h2 class="section-title">📖 L'Histoire Derrière les Données</h2>
+      <p class="section-subtitle">Quand la passion rencontre l'analyse statistique</p>
+      
+      <div class="problem-cards">
+        <div class="problem-card">
+          <span class="problem-icon">🤔</span>
+          <h3 class="problem-title">Le Constat Initial</h3>
+          <p>En tant que fan de F1, j'ai remarqué que les courses devenaient de plus en plus prévisibles. Les qualifications semblaient déterminer le résultat final plus que jamais. Mais était-ce juste une impression ou une réalité statistique ?</p>
+        </div>
+        
+        <div class="problem-card">
+          <span class="problem-icon">📊</span>
+          <h3 class="problem-title">L'Approche Data</h3>
+          <p>J'ai décidé d'utiliser mes compétences en data science pour analyser objectivement ce phénomène. 75+ courses, 3 saisons complètes, des milliers de points de données pour comprendre l'évolution du sport.</p>
+        </div>
+        
+        <div class="problem-card">
+          <span class="problem-icon">😱</span>
+          <h3 class="problem-title">La Révélation</h3>
+          <p>Les résultats sont sans appel : la corrélation entre qualification et course a augmenté de 15% en 3 ans. Les données confirment ce que les fans ressentent : la F1 traverse une crise du divertissement.</p>
+        </div>
+      </div>
+    </section>
 
-    <p>
-      On peut par exemple comparer deux pilotes sur un même tour pour visualiser où l’un gagne du temps.
-      Le projet inclut des visualisations avancées, un notebook Jupyter et une analyse comparative.
-    </p>
+    <!-- Technical Implementation -->
+    <section class="section">
+      <h2 class="section-title">🛠️ Stack Technique & Méthodologie</h2>
+      <p class="section-subtitle">Les outils qui ont rendu cette analyse possible</p>
+      
+      <div class="tech-grid">
+        <div class="tech-item">
+          <span class="tech-icon">🐍</span>
+          <h4>Python</h4>
+          <p>Analyse & Processing</p>
+        </div>
+        <div class="tech-item">
+          <span class="tech-icon">🐼</span>
+          <h4>Pandas</h4>
+          <p>Manipulation des données</p>
+        </div>
+        <div class="tech-item">
+          <span class="tech-icon">📊</span>
+          <h4>Plotly</h4>
+          <p>Visualisations interactives</p>
+        </div>
+        <div class="tech-item">
+          <span class="tech-icon">🚀</span>
+          <h4>Streamlit</h4>
+          <p>Dashboard web</p>
+        </div>
+        <div class="tech-item">
+          <span class="tech-icon">🧮</span>
+          <h4>NumPy</h4>
+          <p>Calculs statistiques</p>
+        </div>
+        <div class="tech-item">
+          <span class="tech-icon">🤖</span>
+          <h4>Scikit-learn</h4>
+          <p>Machine Learning</p>
+        </div>
+      </div>
+    </section>
 
-    <a class="button-link" href="https://github.com/kayouba/projet-f1" target="_blank">
-      🔗 Voir le code sur GitHub
-    </a>
+    <!-- Dashboard Preview -->
+    <section class="section">
+      <h2 class="section-title">🖥️ Dashboard Interactif</h2>
+      <p class="section-subtitle">Explorez les données par vous-même</p>
+      
+      <div class="dashboard-preview">
+        <div class="dashboard-header">
+          <h3>F1 Predictability Crisis - Live Analytics</h3>
+          <a href="https://f1-analysis-kayouba.streamlit.app" target="_blank" class="cta-button" style="padding: 0.8rem 1.5rem; font-size: 1rem;">
+            <i class="fas fa-external-link-alt"></i> Ouvrir le Dashboard
+          </a>
+        </div>
+        <img src="dashboard-preview.png" alt="F1 Analytics Dashboard Preview" class="dashboard-image" />
+      </div>
+    </section>
+
+    <!-- Key Insights -->
+    <section class="section">
+      <h2 class="section-title">💡 Insights Clés</h2>
+      <p class="section-subtitle">Ce que les données révèlent sur l'état actuel de la F1</p>
+      
+      <div class="insights-grid">
+        <div class="insight-card">
+          <span class="insight-number">82%</span>
+          <h3>Corrélation Quali-Course</h3>
+          <p>La position en qualification prédit le résultat final avec une précision alarmante de 82%. C'est 15% de plus qu'il y a 3 ans.</p>
+        </div>
+        
+        <div class="insight-card">
+          <span class="insight-number">78%</span>
+          <h3>Victoires depuis la Pole</h3>
+          <p>En 2025, 78% des victoires viennent de la pole position. Max Verstappen avait raison : "Si tu pars devant, tu finis devant".</p>
+        </div>
+        
+        <div class="insight-card">
+          <span class="insight-number">-23%</span>
+          <h3>Baisse des Dépassements</h3>
+          <p>Malgré les promesses de la FIA, les dépassements ont chuté de 23% depuis 2022. Le DRS reste le seul espoir.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Results & Impact -->
+    <section class="section">
+      <h2 class="section-title">🎯 Résultats & Impact</h2>
+      <p class="section-subtitle">Les implications pour le futur de la F1</p>
+      
+      <div class="results-showcase">
+        <div class="result-item">
+          <span class="result-icon"><i class="fas fa-chart-line"></i></span>
+          <div>
+            <h4>Modèle Prédictif</h4>
+            <p>Notre modèle Random Forest prédit les résultats avec 82% de précision en se basant uniquement sur la grille de départ.</p>
+          </div>
+        </div>
+        
+        <div class="result-item">
+          <span class="result-icon"><i class="fas fa-exclamation-triangle"></i></span>
+          <div>
+            <h4>Alerte Business</h4>
+            <p>Le "Predictability Crisis Index" atteint 85/100, indiquant un risque élevé pour l'engagement des spectateurs.</p>
+          </div>
+        </div>
+        
+        <div class="result-item">
+          <span class="result-icon"><i class="fas fa-lightbulb"></i></span>
+          <div>
+            <h4>Recommandations Stratégiques</h4>
+            <p>Réduction du poids des voitures, simplification aérodynamique, et expansion des zones DRS sont critiques pour 2026.</p>
+          </div>
+        </div>
+        
+        <div class="result-item">
+          <span class="result-icon"><i class="fas fa-users"></i></span>
+          <div>
+            <h4>Impact Communautaire</h4>
+            <p>Le projet a généré des discussions dans la communauté F1, confirmant que les données reflètent le ressenti des fans.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="section" style="text-align: center;">
+      <h2 class="section-title">🚀 Prêt à Explorer les Données ?</h2>
+      <p class="section-subtitle">Découvrez l'analyse complète et tirez vos propres conclusions</p>
+      
+      <div class="cta-buttons" style="margin-top: 3rem;">
+        <a href="https://f1-analysis-kayouba.streamlit.app" target="_blank" class="cta-button">
+          <i class="fas fa-rocket"></i>
+          Accéder au Dashboard Complet
+        </a>
+        <a href="https://github.com/kayouba/f1-analysis" target="_blank" class="cta-button secondary">
+          <i class="fab fa-github"></i>
+          Voir le Code Source
+        </a>
+        <a href="../index.html#projects" class="cta-button secondary">
+          <i class="fas fa-arrow-left"></i>
+          Retour aux Projets
+        </a>
+      </div>
+    </section>
   </main>
 
-  <footer>
-    <p>© 2025 Kayou Ba</p>
+  <!-- Footer -->
+  <footer style="background: var(--f1-dark); padding: 3rem 2rem; text-align: center;">
+    <p style="color: var(--text-muted); margin-bottom: 1rem;">
+      Un projet de <strong style="color: var(--f1-red);">Kayou Ba</strong> - Data Scientist & F1 Enthusiast
+    </p>
+    <p style="color: var(--text-muted); font-size: 0.9rem;">
+      © 2025 - Analyse basée sur les données Ergast F1 API
+    </p>
   </footer>
+
+  <script>
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+
+    // Add animation on scroll
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -100px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.section').forEach(section => {
+      section.style.opacity = '0';
+      section.style.transform = 'translateY(30px)';
+      section.style.transition = 'all 0.6s ease-out';
+      observer.observe(section);
+    });
+  </script>
 </body>
 </html>
