@@ -3,8 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kayou Ba – Data Analyst & Software Engineer</title>
-  <meta name="description" content="Portfolio de Kayou Ba - Data Analyst et Software Engineer spécialisé en Python, analyse de données et développement web. Découvrez mes projets et compétences.">
+  <title>Kayou Ba – Data Analyst & Software Engineer | Portfolio 2025</title>
+  <meta name="description" content="Portfolio de Kayou Ba - Data Analyst et Software Engineer spécialisé en Python, Machine Learning, analyse de données et développement web.">
+  <meta name="keywords" content="Kayou Ba, Data Analyst, Software Engineer, Python, Machine Learning, Portfolio, Bordeaux, MIAGE">
+  <meta name="author" content="Kayou Ba">
   <link rel="stylesheet" href="style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -17,31 +19,49 @@
     <div class="loading-spinner"></div>
   </div>
 
+  <!-- Header -->
   <header class="site-header" id="header">
-    <div class="logo">Kayou <span>Ba</span></div>
-    <nav class="navbar">
-      <a href="#about">À propos</a>
-      <a href="#projects">Projets</a>
-      <a href="#skills">Compétences</a>
-      <a href="#cv">CV</a>
-      <a href="#contact">Contact</a>
-    </nav>
-    <div class="mobile-menu" id="mobile-menu">
-      <span></span>
-      <span></span>
-      <span></span>
+    <div class="header-container">
+      <div class="logo">Kayou <span>Ba</span></div>
+      <nav class="navbar">
+        <a href="#about">À propos</a>
+        <a href="#projects">Projets</a>
+        <a href="#skills">Compétences</a>
+        <a href="#certifications">Certifications</a>
+        <a href="#cv">CV</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <div class="mobile-menu" id="mobile-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
     </div>
   </header>
 
+  <!-- Hero Section -->
   <section class="hero">
     <div class="particles" id="particles"></div>
     <div class="hero-content">
       <h1 class="animated-title">Kayou Ba</h1>
-      <h2>Data Analyst • Software Engineer</h2>
-      <p>Je transforme la donnée en insights stratégiques. Passionné par l'analyse de données, l'automatisation et le développement de solutions innovantes qui créent de la valeur.</p>
+      <h2 class="hero-subtitle">
+        <span class="typing-text"></span>
+        <span class="cursor">|</span>
+      </h2>
+      <p class="hero-description">
+        Je transforme la donnée en <span class="highlight">insights stratégiques</span>. 
+        Passionné par l'analyse de données, l'automatisation et le développement de 
+        <span class="highlight">solutions innovantes</span> qui créent de la valeur.
+      </p>
       <div class="hero-cta">
-        <a href="#projects" class="cta-button primary">Voir mes projets</a>
-        <a href="#contact" class="cta-button secondary">Me contacter</a>
+        <a href="#projects" class="cta-button primary">
+          <i class="fas fa-rocket"></i>
+          Découvrir mes projets
+        </a>
+        <a href="#contact" class="cta-button secondary">
+          <i class="fas fa-comments"></i>
+          Me contacter
+        </a>
       </div>
     </div>
     <div class="scroll-indicator">
@@ -52,17 +72,20 @@
   </section>
 
   <main>
+    <!-- About Section -->
     <section id="about" class="section">
       <h2>À propos de moi</h2>
       <p class="section-intro">
         Alternant en Master MIAGE, je combine expertise technique et vision business pour créer des solutions data-driven performantes.
       </p>
+      
       <div class="about-grid">
         <div class="about-left">
           <img src="portrait.jpg" alt="Photo de Kayou Ba" class="profile-photo">
           <h3>Kayou Ba</h3>
-          <span class="badge">Available from Sept. 2025</span>
+          <span class="badge">Disponible Sept. 2025</span>
           <p>Étudiant en Master MIAGE à Bordeaux et alternant chez Sopra Steria, je me spécialise en data analysis, automatisation et développement logiciel. Ma double compétence technique et business me permet de transformer les données en leviers stratégiques.</p>
+          
           <div class="stats-mini">
             <div class="stat">
               <span class="stat-number">2+</span>
@@ -73,11 +96,12 @@
               <span class="stat-label">Applications maintenues</span>
             </div>
             <div class="stat">
-              <span class="stat-number">5</span>
+              <span class="stat-number">10+</span>
               <span class="stat-label">Technologies maîtrisées</span>
             </div>
           </div>
         </div>
+        
         <div class="about-right">
           <h3><i class="fas fa-briefcase"></i> Parcours professionnel</h3>
           <div class="timeline">
@@ -127,15 +151,15 @@
               </p>
               <p>Spécialisation : Méthodes Informatiques Appliquées à la Gestion des Entreprises</p>
               <div class="course-highlights">
-                <span>Machine Learning</span>
-                <span>Big Data</span>
-                <span>Business Intelligence</span>
+                <p><strong>Cours pertinents :</strong> Processus stochastiques • Simulation • SGBD • Statistiques • POO • Recherche opérationnelle • Gestion de projet • Machine Learning • Big Data • Business Intelligence</p>
               </div>
             </div>
           </div>
         </div>
       </div>
     </section>
+
+    <!-- Projects Section -->
     <section id="projects" class="section">
       <h2>Projets remarquables</h2>
       <p class="section-intro">
@@ -149,7 +173,7 @@
             <span class="project-status live">Live</span>
           </div>
           <h3>🏎️ F1 Analytics Dashboard</h3>
-          <p>Analyse de l'impact des réglementations sur les dépassements en F1. Dashboard interactif avec 75+ courses analysées.</p>
+          <p>Analyse de l'impact des réglementations sur les dépassements en F1. Dashboard interactif avec 75+ courses analysées démontrant la crise de prévisibilité du sport.</p>
           <div class="project-tech">
             <span>Python</span>
             <span>Streamlit</span>
@@ -166,28 +190,30 @@
 
         <div class="project">
           <h3>⚽ Analyse xG Mbappé <span class="project-status coming">Bientôt</span></h3>
-          <p>Étude data-driven sur la finition de Kylian Mbappé. Confrontation entre perception et réalité statistique.</p>
+          <p>Étude data-driven sur la finition de Kylian Mbappé. J'ai l'impression visuelle que Mbappé n'est pas un finisseur d'exception - cette analyse confrontera cette perception aux données statistiques réelles des Expected Goals.</p>
           <div class="project-tech">
             <span>Python</span>
             <span>Pandas</span>
             <span>Data Viz</span>
+            <span>StatsBomb API</span>
           </div>
-          <a class="project-link" href="#">À venir</a>
+          <a class="project-link disabled" href="#">En développement</a>
         </div>
 
         <div class="project">
           <h3>📊 Dashboard Power BI <span class="project-status coming">Bientôt</span></h3>
-          <p>Visualisation interactive de données publiques pour faciliter la prise de décision stratégique.</p>
+          <p>Visualisation interactive de données publiques pour faciliter la prise de décision stratégique. Dashboard complet avec KPIs dynamiques et analyses prédictives.</p>
           <div class="project-tech">
             <span>Power BI</span>
             <span>DAX</span>
             <span>ETL</span>
           </div>
-          <a class="project-link" href="#">À venir</a>
+          <a class="project-link disabled" href="#">En développement</a>
         </div>
       </div>
     </section>
 
+    <!-- Skills Section -->
     <section id="skills" class="section">
       <h2>Stack technique</h2>
       <p class="section-intro">
@@ -231,9 +257,17 @@
           </ul>
         </div>
       </div>
+    </section>
+
+    <!-- Certifications Section -->
+    <section id="certifications" class="section">
+      <h2>Certifications</h2>
+      <p class="section-intro">
+        Un parcours de formation continue pour rester à la pointe des technologies data.
+      </p>
 
       <div class="certifications">
-        <h3>🏆 Certifications</h3>
+        <h3>🏆 Certifications obtenues</h3>
         <div class="cert-grid">
           <div class="cert-item">
             <i class="fas fa-certificate"></i>
@@ -243,23 +277,34 @@
           <div class="cert-item">
             <i class="fas fa-certificate"></i>
             <h4>Duolingo English Test</h4>
-            <p>Score : 135/160 – Compétences linguistiques solides</p>
+            <p>Score : 135/160</p>
           </div>
-          <div class="cert-item">
-            <i class="fas fa-certificate"></i>
+        </div>
+
+        <h3 style="margin-top: 3rem;">📚 Certifications en cours</h3>
+        <div class="cert-grid">
+          <div class="cert-item in-progress">
+            <i class="fas fa-graduation-cap"></i>
             <h4>Google Data Analytics</h4>
-            <p>Certificat professionnel (en cours)</p>
+            <p>Professional Certificate - En cours</p>
+          </div>
+          <div class="cert-item in-progress">
+            <i class="fas fa-graduation-cap"></i>
+            <h4>IBM Data Science</h4>
+            <p>Professional Certificate - En cours</p>
           </div>
         </div>
       </div>
     </section>
+
+    <!-- CV Section -->
     <section id="cv" class="section">
       <h2>Documentation</h2>
       <p class="section-intro">
         Téléchargez mon CV pour une vue détaillée de mon parcours et de mes compétences.
       </p>
+      
       <div class="cv-container">
-
         <div class="cv-actions">
           <h3>Disponible en deux langues</h3>
           <p>CV adapté selon vos besoins, en français ou en anglais.</p>
@@ -271,20 +316,11 @@
               <i class="fas fa-file-pdf"></i> Resume (EN)
             </a>
           </div>
-          <div class="cv-stats">
-            <div class="cv-stat">
-              <i class="fas fa-download"></i>
-              <span>Format PDF optimisé</span>
-            </div>
-            <div class="cv-stat">
-              <i class="fas fa-mobile-alt"></i>
-              <span>Compatible ATS</span>
-            </div>
-          </div>
         </div>
       </div>
     </section>
 
+    <!-- Contact Section -->
     <section id="contact" class="section">
       <h2>Prenons contact</h2>
       <p class="section-intro">
@@ -330,13 +366,13 @@
           
           <div class="social-links">
             <a href="https://github.com/kayouba" target="_blank" title="GitHub">
-              <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/github.svg" alt="GitHub" class="social-icon" />
+              <i class="fab fa-github"></i>
             </a>
             <a href="https://www.linkedin.com/in/kayouba" target="_blank" title="LinkedIn">
-              <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linkedin.svg" alt="LinkedIn" class="social-icon" />
+              <i class="fab fa-linkedin"></i>
             </a>
-            <a href="mailto:kayouba818@gmail.com" target="_blank" title="Email">
-              <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/gmail.svg" alt="Email" class="social-icon" />
+            <a href="mailto:kayouba818@gmail.com" title="Email">
+              <i class="fas fa-envelope"></i>
             </a>
           </div>
         </div>
@@ -344,20 +380,22 @@
     </section>
   </main>
 
+  <!-- Footer -->
   <footer>
     <div class="footer-content">
-      <p>© 2025 Kayou Ba – Conçu avec passion pour l'innovation</p>
-      <p class="footer-tech">Built with <i class="fas fa-heart"></i> using HTML, CSS & JavaScript</p>
+      <p>© 2025 Kayou Ba – Data Analyst & Software Engineer | <a href="https://linkedin.com/in/kayouba" target="_blank">LinkedIn</a> • <a href="https://github.com/kayouba" target="_blank">GitHub</a></p>
     </div>
   </footer>
 
   <script>
+    // Loading animation
     window.addEventListener('load', () => {
       setTimeout(() => {
         document.getElementById('loading').style.display = 'none';
       }, 1000);
     });
 
+    // Header scroll effect
     window.addEventListener('scroll', () => {
       const header = document.getElementById('header');
       if (window.scrollY > 50) {
@@ -367,6 +405,7 @@
       }
     });
 
+    // Smooth scrolling
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function (e) {
         e.preventDefault();
@@ -377,6 +416,7 @@
       });
     });
 
+    // Intersection Observer for animations
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -390,6 +430,41 @@
 
     document.querySelectorAll('.section').forEach(section => observer.observe(section));
 
+    // Typing animation
+    const texts = ['Data Analyst', 'Software Engineer', 'Problem Solver'];
+    let textIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+
+    function typeText() {
+      const currentText = texts[textIndex];
+      const typingElement = document.querySelector('.typing-text');
+      
+      if (!typingElement) return;
+
+      if (isDeleting) {
+        typingElement.textContent = currentText.substring(0, charIndex - 1);
+        charIndex--;
+      } else {
+        typingElement.textContent = currentText.substring(0, charIndex + 1);
+        charIndex++;
+      }
+
+      if (!isDeleting && charIndex === currentText.length) {
+        isDeleting = true;
+        setTimeout(typeText, 2000);
+      } else if (isDeleting && charIndex === 0) {
+        isDeleting = false;
+        textIndex = (textIndex + 1) % texts.length;
+        setTimeout(typeText, 500);
+      } else {
+        setTimeout(typeText, isDeleting ? 50 : 100);
+      }
+    }
+
+    setTimeout(typeText, 1500);
+
+    // Particles animation
     function createParticle() {
       const particle = document.createElement('div');
       particle.className = 'particle';
@@ -402,6 +477,7 @@
 
     setInterval(createParticle, 300);
 
+    // Mobile menu
     const mobileMenu = document.getElementById('mobile-menu');
     const navbar = document.querySelector('.navbar');
     mobileMenu?.addEventListener('click', () => {
@@ -409,6 +485,7 @@
       navbar.classList.toggle('active');
     });
 
+    // Title animation
     const title = document.querySelector('.animated-title');
     const text = title.textContent;
     title.textContent = '';

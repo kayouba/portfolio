@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>F1 Predictability Crisis - Data Analysis Project | Kayou Ba</title>
+  <title>F1 Predictability Crisis - Data Science Case Study | Kayou Ba</title>
+  <meta name="description" content="Comprehensive data analysis revealing F1's entertainment crisis through advanced statistics and machine learning.">
   <link rel="stylesheet" href="../style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -11,7 +12,7 @@
   <script src="https://kit.fontawesome.com/3b1d4f5a8f.js" crossorigin="anonymous"></script>
   
   <style>
-    /* Variables */
+    /* F1 Project Specific Styles */
     :root {
       --f1-red: #ff1801;
       --f1-dark: #15151e;
@@ -20,88 +21,90 @@
       --text-muted: #a0a0b8;
     }
 
-    /* Hero Section */
+    /* Clean Hero */
     .project-hero {
-      background: var(--f1-gradient);
+      background: linear-gradient(180deg, #0a0a0a 0%, #000000 100%);
       min-height: 70vh;
       display: flex;
       align-items: center;
-      justify-content: center;
+      padding: 6rem 2rem 4rem;
       position: relative;
       overflow: hidden;
     }
 
-    .hero-content {
-      text-align: center;
-      z-index: 2;
-      padding: 2rem;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .hero-title {
-      font-size: clamp(2.5rem, 5vw, 4rem);
-      font-weight: 800;
-      margin-bottom: 1.5rem;
-      background: linear-gradient(to right, #fff, #ff6b35);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: slideInDown 0.8s ease-out;
-    }
-
-    .hero-subtitle {
-      font-size: clamp(1.1rem, 2vw, 1.5rem);
-      color: rgba(255, 255, 255, 0.9);
-      margin-bottom: 3rem;
-      animation: slideInUp 0.8s ease-out;
-    }
-
-    /* Animated background */
-    .hero-bg-animation {
+    .hero-bg-pattern {
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      opacity: 0.1;
+      opacity: 0.05;
       background-image: 
-        repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255, 255, 255, 0.05) 35px, rgba(255, 255, 255, 0.05) 70px);
-      animation: slide 20s linear infinite;
+        radial-gradient(circle at 20% 50%, var(--f1-red) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, var(--f1-red) 0%, transparent 50%);
     }
 
-    @keyframes slide {
-      0% { transform: translate(0, 0); }
-      100% { transform: translate(70px, 70px); }
+    .hero-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      z-index: 2;
     }
 
-    /* Key Metrics */
-    .key-metrics {
+    .back-nav {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      margin-bottom: 2rem;
+      transition: color 0.3s ease;
+    }
+
+    .back-nav:hover {
+      color: var(--f1-red);
+    }
+
+    .hero-header {
+      margin-bottom: 3rem;
+    }
+
+    .hero-title {
+      font-size: clamp(2.5rem, 5vw, 3.5rem);
+      font-weight: 800;
+      margin-bottom: 1rem;
+      letter-spacing: -1px;
+    }
+
+    .hero-subtitle {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      max-width: 700px;
+    }
+
+    /* Key Metrics Grid */
+    .metrics-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 2rem;
-      margin: 3rem 0;
-      animation: fadeIn 1s ease-out 0.3s both;
+      gap: 1.5rem;
+      margin-bottom: 3rem;
     }
 
     .metric-card {
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: var(--card-bg);
       padding: 2rem;
-      border-radius: 20px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
       text-align: center;
       transition: all 0.3s ease;
     }
 
     .metric-card:hover {
-      transform: translateY(-10px);
-      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-5px);
       border-color: var(--f1-red);
-      box-shadow: 0 20px 40px rgba(255, 24, 1, 0.3);
     }
 
     .metric-value {
-      font-size: 3rem;
+      font-size: 2.5rem;
       font-weight: 800;
       color: var(--f1-red);
       display: block;
@@ -109,341 +112,352 @@
     }
 
     .metric-label {
-      font-size: 1rem;
+      font-size: 0.875rem;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 1px;
     }
 
-    /* CTA Buttons */
-    .cta-buttons {
+    .metric-status {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 0.5rem;
+    }
+
+    .status-critical { background: var(--f1-red); }
+    .status-warning { background: #fb8500; }
+    .status-good { background: #2ea043; }
+
+    /* Hero CTAs */
+    .hero-actions {
       display: flex;
       gap: 1.5rem;
-      justify-content: center;
       flex-wrap: wrap;
-      margin-top: 3rem;
-      animation: fadeIn 1s ease-out 0.5s both;
     }
 
     .cta-button {
       display: inline-flex;
       align-items: center;
-      gap: 0.8rem;
-      padding: 1.2rem 2.5rem;
+      gap: 0.75rem;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .cta-button.primary {
       background: var(--f1-red);
       color: white;
-      text-decoration: none;
-      border-radius: 50px;
-      font-weight: 600;
-      font-size: 1.1rem;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
     }
 
-    .cta-button:before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-      transition: left 0.5s;
-    }
-
-    .cta-button:hover:before {
-      left: 100%;
-    }
-
-    .cta-button:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 30px rgba(255, 24, 1, 0.5);
+    .cta-button.primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(255, 24, 1, 0.3);
     }
 
     .cta-button.secondary {
       background: transparent;
-      border: 2px solid white;
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.3);
     }
 
     .cta-button.secondary:hover {
-      background: white;
-      color: var(--f1-dark);
+      border-color: white;
+      background: rgba(255, 255, 255, 0.1);
     }
 
     /* Content Sections */
     .project-content {
+      padding: 4rem 2rem;
       max-width: 1200px;
       margin: 0 auto;
-      padding: 4rem 2rem;
     }
 
     .section {
       margin-bottom: 6rem;
-      animation: fadeInUp 0.8s ease-out;
     }
 
-    .section-title {
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-      color: white;
-    }
-
-    .section-subtitle {
-      font-size: 1.2rem;
-      color: var(--text-muted);
+    .section-header {
       margin-bottom: 3rem;
     }
 
-    /* Problem Statement */
-    .problem-cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2rem;
-      margin: 3rem 0;
-    }
-
-    .problem-card {
-      background: var(--card-bg);
-      padding: 2.5rem;
-      border-radius: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      transition: all 0.3s ease;
-    }
-
-    .problem-card:hover {
-      transform: translateY(-5px);
-      border-color: var(--f1-red);
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-    }
-
-    .problem-icon {
-      font-size: 3rem;
-      margin-bottom: 1.5rem;
-      display: block;
-    }
-
-    .problem-title {
-      font-size: 1.5rem;
-      color: var(--f1-red);
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
       margin-bottom: 1rem;
     }
 
-    /* Tech Stack */
-    .tech-grid {
+    .section-subtitle {
+      font-size: 1.125rem;
+      color: var(--text-muted);
+      max-width: 700px;
+    }
+
+    /* Problem Statement */
+    .problem-statement {
+      background: var(--card-bg);
+      padding: 3rem;
+      border-radius: 16px;
+      margin-bottom: 4rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .problem-quote {
+      font-size: 1.5rem;
+      font-style: italic;
+      color: var(--f1-red);
+      margin-bottom: 2rem;
+      position: relative;
+      padding-left: 3rem;
+    }
+
+    .problem-quote::before {
+      content: '"';
+      position: absolute;
+      left: 0;
+      top: -10px;
+      font-size: 4rem;
+      opacity: 0.3;
+    }
+
+    /* Data Insights */
+    .insights-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .insight-card {
+      background: linear-gradient(135deg, rgba(255, 24, 1, 0.05) 0%, rgba(26, 26, 46, 0.8) 100%);
+      padding: 2rem;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 24, 1, 0.2);
+    }
+
+    .insight-card h3 {
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+      color: var(--f1-red);
+    }
+
+    /* Technical Stack */
+    .tech-showcase {
+      background: var(--card-bg);
+      padding: 3rem;
+      border-radius: 16px;
       margin: 3rem 0;
     }
 
-    .tech-item {
-      background: rgba(255, 255, 255, 0.05);
-      padding: 1.5rem;
-      border-radius: 15px;
-      text-align: center;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      transition: all 0.3s ease;
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
     }
 
-    .tech-item:hover {
-      background: rgba(255, 24, 1, 0.1);
-      border-color: var(--f1-red);
-      transform: scale(1.05);
+    .tech-item {
+      text-align: center;
     }
 
     .tech-icon {
       font-size: 2.5rem;
+      color: var(--f1-red);
       margin-bottom: 0.5rem;
-      display: block;
     }
 
-    /* Dashboard Preview */
-    .dashboard-preview {
-      background: var(--card-bg);
-      border-radius: 20px;
-      overflow: hidden;
+    .tech-name {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .tech-detail {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    /* Results Preview */
+    .results-preview {
+      background: #0a0a0a;
+      padding: 3rem;
+      border-radius: 16px;
       margin: 3rem 0;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    .dashboard-header {
-      background: var(--f1-red);
-      padding: 1.5rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    .dashboard-preview {
+      margin: 2rem 0;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
     }
 
-    .dashboard-header h3 {
-      margin: 0;
-      color: white;
-      font-size: 1.2rem;
-    }
-
-    .dashboard-image {
+    .dashboard-preview img {
       width: 100%;
       height: auto;
       display: block;
     }
 
-    /* Insights Section */
-    .insights-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2rem;
+    /* Code Preview */
+    .code-section {
       margin: 3rem 0;
     }
 
-    .insight-card {
-      background: linear-gradient(135deg, rgba(255, 24, 1, 0.1), rgba(26, 26, 46, 0.8));
+    .code-preview {
+      background: #0a0a0a;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
       padding: 2rem;
-      border-radius: 20px;
-      border: 1px solid rgba(255, 24, 1, 0.3);
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 0.875rem;
+      line-height: 1.6;
     }
 
-    .insight-number {
-      font-size: 3rem;
-      font-weight: 800;
-      color: var(--f1-red);
-      display: block;
-      margin-bottom: 0.5rem;
+    .code-preview code {
+      color: #fff;
     }
 
-    /* Results Section */
-    .results-showcase {
-      background: linear-gradient(135deg, var(--card-bg), rgba(255, 24, 1, 0.05));
+    /* Recommendations */
+    .recommendations {
+      background: linear-gradient(135deg, var(--card-bg) 0%, rgba(255, 24, 1, 0.05) 100%);
       padding: 3rem;
-      border-radius: 20px;
+      border-radius: 16px;
       margin: 3rem 0;
     }
 
-    .result-item {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin: 1.5rem 0;
+    .rec-list {
+      list-style: none;
+      margin-top: 2rem;
+    }
+
+    .rec-list li {
       padding: 1rem 0;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
     }
 
-    .result-icon {
+    .rec-list li:last-child {
+      border-bottom: none;
+    }
+
+    .rec-icon {
       color: var(--f1-red);
-      font-size: 1.5rem;
+      font-size: 1.25rem;
+      flex-shrink: 0;
     }
 
-    /* Animations */
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+    /* Footer CTA */
+    .footer-cta {
+      background: var(--f1-gradient);
+      padding: 4rem;
+      border-radius: 16px;
+      text-align: center;
+      margin-top: 4rem;
     }
 
-    @keyframes fadeInUp {
-      from { 
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to { 
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .footer-cta h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
     }
 
-    @keyframes slideInDown {
-      from {
-        opacity: 0;
-        transform: translateY(-50px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes slideInUp {
-      from {
-        opacity: 0;
-        transform: translateY(50px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .footer-cta p {
+      font-size: 1.125rem;
+      margin-bottom: 2rem;
+      opacity: 0.9;
     }
 
     /* Responsive */
     @media (max-width: 768px) {
-      .hero-title {
-        font-size: 2.5rem;
+      .metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
       }
       
-      .metric-value {
-        font-size: 2rem;
-      }
-      
-      .cta-buttons {
+      .hero-actions {
         flex-direction: column;
         width: 100%;
       }
       
       .cta-button {
         width: 100%;
-        text-align: center;
         justify-content: center;
       }
     }
   </style>
 </head>
 <body>
-  <!-- Header -->
+  <!-- Simple Header -->
   <header class="site-header">
-    <div class="logo">Kayou <span>Ba</span></div>
-    <nav class="navbar">
-      <a href="../index.html#about">À propos</a>
-      <a href="../index.html#projects">Projets</a>
-      <a href="../index.html#skills">Compétences</a>
-      <a href="../index.html#certifications">Certifications</a>
-      <a href="../index.html#cv">CV</a>
-      <a href="../index.html#contact">Contact</a>
-    </nav>
+    <div class="header-container">
+      <a href="../index.html" class="logo">Kayou <span>Ba</span></a>
+      <nav class="navbar">
+        <a href="../index.html">Accueil</a>
+        <a href="../index.html#projects">Projets</a>
+        <a href="../index.html#contact">Contact</a>
+      </nav>
+    </div>
   </header>
 
   <!-- Hero Section -->
   <section class="project-hero">
-    <div class="hero-bg-animation"></div>
+    <div class="hero-bg-pattern"></div>
     <div class="hero-content">
-      <h1 class="hero-title">🏎️ F1 Predictability Crisis</h1>
-      <p class="hero-subtitle">Une analyse data-driven de l'évolution du divertissement en Formule 1</p>
+      <a href="../index.html#projects" class="back-nav">
+        <i class="fas fa-arrow-left"></i> Retour aux projets
+      </a>
       
-      <div class="key-metrics">
+      <div class="hero-header">
+        <h1 class="hero-title">F1 Predictability Crisis Analysis</h1>
+        <p class="hero-subtitle">
+          Une analyse data-driven révélant comment les réglementations modernes ont transformé 
+          la F1 en un sport prévisible, avec des implications majeures pour son avenir commercial.
+        </p>
+      </div>
+
+      <div class="metrics-grid">
         <div class="metric-card">
           <span class="metric-value">82%</span>
-          <span class="metric-label">Corrélation Quali-Course</span>
+          <span class="metric-label">
+            <span class="metric-status status-critical"></span>
+            Corrélation Quali-Course
+          </span>
         </div>
         <div class="metric-card">
-          <span class="metric-value">75+</span>
-          <span class="metric-label">Courses Analysées</span>
+          <span class="metric-value">78%</span>
+          <span class="metric-label">
+            <span class="metric-status status-critical"></span>
+            Victoires depuis la Pole
+          </span>
         </div>
         <div class="metric-card">
-          <span class="metric-value">3</span>
-          <span class="metric-label">Saisons Complètes</span>
+          <span class="metric-value">-23%</span>
+          <span class="metric-label">
+            <span class="metric-status status-warning"></span>
+            Dépassements depuis 2022
+          </span>
         </div>
         <div class="metric-card">
-          <span class="metric-value">15%</span>
-          <span class="metric-label">↗️ Prévisibilité</span>
+          <span class="metric-value">85/100</span>
+          <span class="metric-label">
+            <span class="metric-status status-critical"></span>
+            Index de Crise
+          </span>
         </div>
       </div>
 
-      <div class="cta-buttons">
-        <a href="https://f1-analysis-kayouba.streamlit.app" target="_blank" class="cta-button">
+      <div class="hero-actions">
+        <a href="https://f1-analysis-kayouba.streamlit.app" target="_blank" class="cta-button primary">
           <i class="fas fa-chart-line"></i>
-          Explorer le Dashboard
+          Explorer le Dashboard Live
         </a>
-        <a href="#story" class="cta-button secondary">
-          <i class="fas fa-book-open"></i>
-          Découvrir l'Histoire
+        <a href="https://github.com/kayouba/f1-analysis" target="_blank" class="cta-button secondary">
+          <i class="fab fa-github"></i>
+          Voir le Code Source
         </a>
       </div>
     </div>
@@ -451,187 +465,317 @@
 
   <!-- Main Content -->
   <main class="project-content">
-    <!-- The Story -->
-    <section id="story" class="section">
-      <h2 class="section-title">📖 L'Histoire Derrière les Données</h2>
-      <p class="section-subtitle">Quand la passion rencontre l'analyse statistique</p>
-      
-      <div class="problem-cards">
-        <div class="problem-card">
-          <span class="problem-icon">🤔</span>
-          <h3 class="problem-title">Le Constat Initial</h3>
-          <p>En tant que fan de F1, j'ai remarqué que les courses devenaient de plus en plus prévisibles. Les qualifications semblaient déterminer le résultat final plus que jamais. Mais était-ce juste une impression ou une réalité statistique ?</p>
-        </div>
+    <!-- Problem Statement -->
+    <section class="section">
+      <div class="problem-statement">
+        <p class="problem-quote">
+          Les voitures sont devenues trop grandes, trop lourdes, et l'aérodynamique 
+          rend le suivi impossible. Si tu pars devant, tu finis devant.
+        </p>
+        <p><strong>— Max Verstappen, Triple Champion du Monde</strong></p>
         
-        <div class="problem-card">
-          <span class="problem-icon">📊</span>
-          <h3 class="problem-title">L'Approche Data</h3>
-          <p>J'ai décidé d'utiliser mes compétences en data science pour analyser objectivement ce phénomène. 75+ courses, 3 saisons complètes, des milliers de points de données pour comprendre l'évolution du sport.</p>
+        <p style="margin-top: 2rem;">
+          En tant que passionné de F1 et Data Analyst, j'ai décidé de quantifier ce que tous les fans ressentent : 
+          la Formule 1 traverse une crise du divertissement sans précédent. Ce projet utilise des techniques avancées 
+          de data science pour analyser 3 années de données (2023-2025) et démontrer statistiquement cette réalité.
+        </p>
+      </div>
+    </section>
+
+    <!-- Approach & Methodology -->
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-title">Approche & Méthodologie</h2>
+        <p class="section-subtitle">
+          Une analyse rigoureuse combinant statistiques avancées et machine learning
+        </p>
+      </div>
+
+      <div class="tech-showcase">
+        <h3>Stack Technique</h3>
+        <div class="tech-grid">
+          <div class="tech-item">
+            <i class="fab fa-python tech-icon"></i>
+            <div class="tech-name">Python</div>
+            <div class="tech-detail">Core Analysis</div>
+          </div>
+          <div class="tech-item">
+            <i class="fas fa-database tech-icon"></i>
+            <div class="tech-name">Pandas</div>
+            <div class="tech-detail">Data Processing</div>
+          </div>
+          <div class="tech-item">
+            <i class="fas fa-chart-area tech-icon"></i>
+            <div class="tech-name">Plotly</div>
+            <div class="tech-detail">Visualizations</div>
+          </div>
+          <div class="tech-item">
+            <i class="fas fa-rocket tech-icon"></i>
+            <div class="tech-name">Streamlit</div>
+            <div class="tech-detail">Web Dashboard</div>
+          </div>
+          <div class="tech-item">
+            <i class="fas fa-brain tech-icon"></i>
+            <div class="tech-name">Scikit-learn</div>
+            <div class="tech-detail">ML Models</div>
+          </div>
+          <div class="tech-item">
+            <i class="fas fa-server tech-icon"></i>
+            <div class="tech-name">Ergast API</div>
+            <div class="tech-detail">F1 Data Source</div>
+          </div>
         </div>
-        
-        <div class="problem-card">
-          <span class="problem-icon">😱</span>
-          <h3 class="problem-title">La Révélation</h3>
-          <p>Les résultats sont sans appel : la corrélation entre qualification et course a augmenté de 15% en 3 ans. Les données confirment ce que les fans ressentent : la F1 traverse une crise du divertissement.</p>
+      </div>
+
+      <div class="code-section">
+        <h3>Exemple : Calcul du Predictability Index</h3>
+        <div class="code-preview">
+          <code>
+def calculate_predictability_index(df):
+    """Composite metric combining multiple predictability factors"""
+    
+    # Core correlation between qualifying and race results
+    correlation = df['quali_position'].corr(df['final_position'])
+    
+    # Pole position dominance
+    pole_wins = df[df['pole_position']]['won_race'].mean()
+    
+    # Top 3 retention rate
+    top3_retention = df[df['top3_quali']]['top3_finish'].mean()
+    
+    # Overtaking frequency
+    overtaking_rate = (df['position_change'] > 0).mean()
+    
+    # Weighted composite index (0-100 scale)
+    predictability_index = (
+        correlation * 0.3 + 
+        pole_wins * 0.25 + 
+        top3_retention * 0.25 + 
+        (1 - overtaking_rate) * 0.2
+    ) * 100
+    
+    return {
+        'index': predictability_index,
+        'status': 'critical' if predictability_index > 85 else 
+                  'warning' if predictability_index > 75 else 'acceptable'
+    }
+          </code>
         </div>
       </div>
     </section>
 
-    <!-- Technical Implementation -->
+    <!-- Key Findings -->
     <section class="section">
-      <h2 class="section-title">🛠️ Stack Technique & Méthodologie</h2>
-      <p class="section-subtitle">Les outils qui ont rendu cette analyse possible</p>
-      
-      <div class="tech-grid">
-        <div class="tech-item">
-          <span class="tech-icon">🐍</span>
-          <h4>Python</h4>
-          <p>Analyse & Processing</p>
+      <div class="section-header">
+        <h2 class="section-title">Découvertes Clés</h2>
+        <p class="section-subtitle">
+          Les données révèlent une transformation inquiétante du sport
+        </p>
+      </div>
+
+      <div class="insights-grid">
+        <div class="insight-card">
+          <h3>📊 Corrélation Alarmante</h3>
+          <p>
+            La corrélation entre qualification et course a atteint <strong>0.82</strong>, 
+            signifiant que la grille de départ prédit le résultat avec une précision de 82%. 
+            C'est une augmentation de 15% depuis 2021.
+          </p>
         </div>
-        <div class="tech-item">
-          <span class="tech-icon">🐼</span>
-          <h4>Pandas</h4>
-          <p>Manipulation des données</p>
+        
+        <div class="insight-card">
+          <h3>🏁 Monopole de la Pole</h3>
+          <p>
+            <strong>78% des victoires</strong> proviennent de la pole position. 
+            Historiquement, ce chiffre oscillait autour de 40-50%, indiquant 
+            une domination sans précédent du samedi.
+          </p>
         </div>
-        <div class="tech-item">
-          <span class="tech-icon">📊</span>
-          <h4>Plotly</h4>
-          <p>Visualisations interactives</p>
+        
+        <div class="insight-card">
+          <h3>📉 Déclin des Dépassements</h3>
+          <p>
+            Malgré le DRS et des zones étendues, les dépassements ont chuté de <strong>23%</strong>. 
+            Seulement 4.2 dépassements moyens par course (hors premier tour).
+          </p>
         </div>
-        <div class="tech-item">
-          <span class="tech-icon">🚀</span>
-          <h4>Streamlit</h4>
-          <p>Dashboard web</p>
+        
+        <div class="insight-card">
+          <h3>💰 Impact Commercial</h3>
+          <p>
+            L'index de prévisibilité de <strong>85/100</strong> représente un risque élevé 
+            pour l'engagement des téléspectateurs et la valeur des droits TV.
+          </p>
         </div>
-        <div class="tech-item">
-          <span class="tech-icon">🧮</span>
-          <h4>NumPy</h4>
-          <p>Calculs statistiques</p>
+        
+        <div class="insight-card">
+          <h3>🎯 Concentration du Podium</h3>
+          <p>
+            <strong>91% des podiums</strong> incluent au moins 2 pilotes du top 3 
+            en qualification. La surprise devient l'exception.
+          </p>
         </div>
-        <div class="tech-item">
-          <span class="tech-icon">🤖</span>
-          <h4>Scikit-learn</h4>
-          <p>Machine Learning</p>
+        
+        <div class="insight-card">
+          <h3>🔧 Facteur Technique</h3>
+          <p>
+            Les voitures de 2024 sont <strong>30% plus lourdes</strong> qu'en 2009, 
+            rendant les manœuvres plus difficiles et prévisibles.
+          </p>
         </div>
       </div>
     </section>
 
     <!-- Dashboard Preview -->
     <section class="section">
-      <h2 class="section-title">🖥️ Dashboard Interactif</h2>
-      <p class="section-subtitle">Explorez les données par vous-même</p>
-      
-      <div class="dashboard-preview">
-        <div class="dashboard-header">
-          <h3>F1 Predictability Crisis - Live Analytics</h3>
-          <a href="https://f1-analysis-kayouba.streamlit.app" target="_blank" class="cta-button" style="padding: 0.8rem 1.5rem; font-size: 1rem;">
-            <i class="fas fa-external-link-alt"></i> Ouvrir le Dashboard
-          </a>
+      <div class="section-header">
+        <h2 class="section-title">Dashboard Interactif</h2>
+        <p class="section-subtitle">
+          Explorez les données en temps réel avec des visualisations dynamiques
+        </p>
+      </div>
+
+      <div class="results-preview">
+        <h3>Streamlit Dashboard Features</h3>
+        <ul style="list-style: none; padding: 0;">
+          <li style="padding: 0.5rem 0;">✓ Analyse comparative multi-saisons (2023-2025)</li>
+          <li style="padding: 0.5rem 0;">✓ Filtrage dynamique par équipe et pilote</li>
+          <li style="padding: 0.5rem 0;">✓ Visualisations interactives Plotly</li>
+          <li style="padding: 0.5rem 0;">✓ Métriques de performance en temps réel</li>
+          <li style="padding: 0.5rem 0;">✓ Prédictions ML pour les courses futures</li>
+        </ul>
+        
+        <div class="dashboard-preview">
+          <img src="dashboard-full-preview.png" alt="F1 Analytics Dashboard" />
         </div>
-        <img src="dashboard-preview.png" alt="F1 Analytics Dashboard Preview" class="dashboard-image" />
       </div>
     </section>
 
-    <!-- Key Insights -->
+    <!-- Business Impact -->
     <section class="section">
-      <h2 class="section-title">💡 Insights Clés</h2>
-      <p class="section-subtitle">Ce que les données révèlent sur l'état actuel de la F1</p>
-      
+      <div class="section-header">
+        <h2 class="section-title">Impact Business & Recommandations</h2>
+        <p class="section-subtitle">
+          Traduire les insights data en stratégie actionnable
+        </p>
+      </div>
+
+      <div class="recommendations">
+        <h3>Recommandations Stratégiques pour la FIA</h3>
+        <ul class="rec-list">
+          <li>
+            <span class="rec-icon"><i class="fas fa-weight"></i></span>
+            <div>
+              <strong>Réduction du poids des voitures</strong><br>
+              Objectif : -50kg pour 2026. Impact estimé : +15% d'opportunités de dépassement.
+            </div>
+          </li>
+          <li>
+            <span class="rec-icon"><i class="fas fa-wind"></i></span>
+            <div>
+              <strong>Simplification aérodynamique</strong><br>
+              Réduire la dépendance à l'appui pour faciliter le suivi rapproché.
+            </div>
+          </li>
+          <li>
+            <span class="rec-icon"><i class="fas fa-expand-arrows-alt"></i></span>
+            <div>
+              <strong>Révision des dimensions</strong><br>
+              Voitures plus courtes et étroites pour plus d'opportunités en piste.
+            </div>
+          </li>
+          <li>
+            <span class="rec-icon"><i class="fas fa-flag-checkered"></i></span>
+            <div>
+              <strong>Format de course alternatif</strong><br>
+              Plus de sprints ou grilles inversées pour créer de l'imprévisibilité.
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="insight-card" style="margin-top: 2rem;">
+        <h3>📈 Projection 2026</h3>
+        <p>
+          Si les tendances actuelles persistent, notre modèle prédit une corrélation 
+          quali-course de <strong>0.87</strong> d'ici 2026, menaçant sérieusement 
+          l'attrait commercial du sport. Les nouvelles réglementations sont critiques.
+        </p>
+      </div>
+    </section>
+
+    <!-- Technical Details -->
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-title">Détails Techniques</h2>
+        <p class="section-subtitle">
+          Pour les recruteurs intéressés par l'implémentation
+        </p>
+      </div>
+
       <div class="insights-grid">
         <div class="insight-card">
-          <span class="insight-number">82%</span>
-          <h3>Corrélation Quali-Course</h3>
-          <p>La position en qualification prédit le résultat final avec une précision alarmante de 82%. C'est 15% de plus qu'il y a 3 ans.</p>
+          <h3>📊 Volume de Données</h3>
+          <ul style="list-style: none; padding: 0;">
+            <li>• 75+ courses analysées</li>
+            <li>• 1,500+ résultats individuels</li>
+            <li>• 20 métriques par course</li>
+            <li>• Données temps réel via API</li>
+          </ul>
         </div>
         
         <div class="insight-card">
-          <span class="insight-number">78%</span>
-          <h3>Victoires depuis la Pole</h3>
-          <p>En 2025, 78% des victoires viennent de la pole position. Max Verstappen avait raison : "Si tu pars devant, tu finis devant".</p>
+          <h3>🔧 Pipeline de Données</h3>
+          <ul style="list-style: none; padding: 0;">
+            <li>• Extraction : Ergast API + Web Scraping</li>
+            <li>• Transformation : Pandas + NumPy</li>
+            <li>• Analyse : SciPy + Statsmodels</li>
+            <li>• ML : Scikit-learn (Random Forest)</li>
+          </ul>
         </div>
         
         <div class="insight-card">
-          <span class="insight-number">-23%</span>
-          <h3>Baisse des Dépassements</h3>
-          <p>Malgré les promesses de la FIA, les dépassements ont chuté de 23% depuis 2022. Le DRS reste le seul espoir.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Results & Impact -->
-    <section class="section">
-      <h2 class="section-title">🎯 Résultats & Impact</h2>
-      <p class="section-subtitle">Les implications pour le futur de la F1</p>
-      
-      <div class="results-showcase">
-        <div class="result-item">
-          <span class="result-icon"><i class="fas fa-chart-line"></i></span>
-          <div>
-            <h4>Modèle Prédictif</h4>
-            <p>Notre modèle Random Forest prédit les résultats avec 82% de précision en se basant uniquement sur la grille de départ.</p>
-          </div>
-        </div>
-        
-        <div class="result-item">
-          <span class="result-icon"><i class="fas fa-exclamation-triangle"></i></span>
-          <div>
-            <h4>Alerte Business</h4>
-            <p>Le "Predictability Crisis Index" atteint 85/100, indiquant un risque élevé pour l'engagement des spectateurs.</p>
-          </div>
-        </div>
-        
-        <div class="result-item">
-          <span class="result-icon"><i class="fas fa-lightbulb"></i></span>
-          <div>
-            <h4>Recommandations Stratégiques</h4>
-            <p>Réduction du poids des voitures, simplification aérodynamique, et expansion des zones DRS sont critiques pour 2026.</p>
-          </div>
-        </div>
-        
-        <div class="result-item">
-          <span class="result-icon"><i class="fas fa-users"></i></span>
-          <div>
-            <h4>Impact Communautaire</h4>
-            <p>Le projet a généré des discussions dans la communauté F1, confirmant que les données reflètent le ressenti des fans.</p>
-          </div>
+          <h3>🚀 Performance</h3>
+          <ul style="list-style: none; padding: 0;">
+            <li>• Dashboard : <100ms response time</li>
+            <li>• Caching intelligent des calculs</li>
+            <li>• Optimisation des requêtes API</li>
+            <li>• Déploiement cloud scalable</li>
+          </ul>
         </div>
       </div>
     </section>
 
     <!-- Call to Action -->
-    <section class="section" style="text-align: center;">
-      <h2 class="section-title">🚀 Prêt à Explorer les Données ?</h2>
-      <p class="section-subtitle">Découvrez l'analyse complète et tirez vos propres conclusions</p>
-      
-      <div class="cta-buttons" style="margin-top: 3rem;">
-        <a href="https://f1-analysis-kayouba.streamlit.app" target="_blank" class="cta-button">
-          <i class="fas fa-rocket"></i>
-          Accéder au Dashboard Complet
+    <div class="footer-cta">
+      <h2>Explorez l'Analyse Complète</h2>
+      <p>
+        Découvrez le dashboard interactif complet avec toutes les visualisations, 
+        filtres dynamiques et prédictions ML.
+      </p>
+      <div class="hero-actions">
+        <a href="https://f1-analysis-kayouba.streamlit.app" target="_blank" class="cta-button primary">
+          <i class="fas fa-external-link-alt"></i>
+          Accéder au Dashboard Live
         </a>
         <a href="https://github.com/kayouba/f1-analysis" target="_blank" class="cta-button secondary">
           <i class="fab fa-github"></i>
-          Voir le Code Source
-        </a>
-        <a href="../index.html#projects" class="cta-button secondary">
-          <i class="fas fa-arrow-left"></i>
-          Retour aux Projets
+          Explorer le Code
         </a>
       </div>
-    </section>
+    </div>
   </main>
 
   <!-- Footer -->
   <footer style="background: var(--f1-dark); padding: 3rem 2rem; text-align: center;">
-    <p style="color: var(--text-muted); margin-bottom: 1rem;">
-      Un projet de <strong style="color: var(--f1-red);">Kayou Ba</strong> - Data Scientist & F1 Enthusiast
-    </p>
-    <p style="color: var(--text-muted); font-size: 0.9rem;">
-      © 2025 - Analyse basée sur les données Ergast F1 API
+    <p style="color: var(--text-muted);">
+      Un projet de <strong style="color: var(--f1-red);">Kayou Ba</strong> - 
+      Data Analyst & F1 Enthusiast
     </p>
   </footer>
 
   <script>
-    // Smooth scroll for anchor links
+    // Smooth scroll
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function (e) {
         e.preventDefault();
@@ -645,12 +789,7 @@
       });
     });
 
-    // Add animation on scroll
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -100px 0px'
-    };
-
+    // Simple fade-in animation
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -658,11 +797,11 @@
           entry.target.style.transform = 'translateY(0)';
         }
       });
-    }, observerOptions);
+    }, { threshold: 0.1 });
 
     document.querySelectorAll('.section').forEach(section => {
       section.style.opacity = '0';
-      section.style.transform = 'translateY(30px)';
+      section.style.transform = 'translateY(20px)';
       section.style.transition = 'all 0.6s ease-out';
       observer.observe(section);
     });
