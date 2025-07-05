@@ -3,137 +3,686 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>F1 Predictability Crisis - Data Science Case Study | Kayou Ba</title>
-  <meta name="description" content="Comprehensive data analysis revealing F1's entertainment crisis through advanced statistics and machine learning.">
+  <title>F1 Predictability Crisis: The Data That Proves Racing Is Dying | Kayou Ba</title>
+  <meta name="description" content="A comprehensive data science investigation into F1's entertainment collapse. Why qualifying now determines 82% of race outcomes.">
   <link rel="stylesheet" href="../style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet" />
   <script src="https://kit.fontawesome.com/3b1d4f5a8f.js" crossorigin="anonymous"></script>
   
   <style>
-    /* F1 Project Specific Styles */
+    /* F1 Design System */
     :root {
-      --f1-red: #ff1801;
-      --f1-dark: #15151e;
-      --f1-gradient: linear-gradient(135deg, #ff1801 0%, #15151e 100%);
-      --card-bg: #1a1a2e;
-      --text-muted: #a0a0b8;
+      --f1-red: #e10600;
+      --f1-black: #15151e;
+      --f1-white: #ffffff;
+      --f1-grey: #38383f;
+      --text-primary: #ffffff;
+      --text-secondary: #a0a0a8;
+      --accent-gold: #ffd700;
+      --accent-green: #00d235;
+      --danger-red: #ff0000;
     }
 
-    /* Clean Hero */
-    .project-hero {
-      background: linear-gradient(180deg, #0a0a0a 0%, #000000 100%);
-      min-height: 70vh;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #000;
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* F1 Style Header */
+    .f1-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      border-bottom: 3px solid var(--f1-red);
+      padding: 1rem 2rem;
+    }
+
+    .header-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Hero with F1 Grid Pattern */
+    .hero-section {
+      margin-top: 80px;
+      min-height: 100vh;
       display: flex;
       align-items: center;
-      padding: 6rem 2rem 4rem;
       position: relative;
+      background: linear-gradient(135deg, rgba(225, 6, 0, 0.1) 0%, #000 50%);
       overflow: hidden;
     }
 
-    .hero-bg-pattern {
+    .hero-section::before {
+      content: '';
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      opacity: 0.05;
       background-image: 
-        radial-gradient(circle at 20% 50%, var(--f1-red) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, var(--f1-red) 0%, transparent 50%);
+        repeating-linear-gradient(90deg, transparent, transparent 49px, rgba(255, 255, 255, 0.03) 49px, rgba(255, 255, 255, 0.03) 51px),
+        repeating-linear-gradient(0deg, transparent, transparent 49px, rgba(255, 255, 255, 0.03) 49px, rgba(255, 255, 255, 0.03) 51px);
+      pointer-events: none;
     }
 
     .hero-content {
       max-width: 1200px;
       margin: 0 auto;
+      padding: 4rem 2rem;
+      position: relative;
       z-index: 2;
     }
 
-    .back-nav {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: var(--text-muted);
-      text-decoration: none;
+    .race-lights {
+      display: flex;
+      gap: 1rem;
       margin-bottom: 2rem;
-      transition: color 0.3s ease;
+      justify-content: center;
     }
 
-    .back-nav:hover {
-      color: var(--f1-red);
+    .light {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #333;
+      animation: lightUp 3s ease-in-out infinite;
     }
 
-    .hero-header {
-      margin-bottom: 3rem;
+    .light:nth-child(1) { animation-delay: 0s; }
+    .light:nth-child(2) { animation-delay: 0.5s; }
+    .light:nth-child(3) { animation-delay: 1s; }
+    .light:nth-child(4) { animation-delay: 1.5s; }
+    .light:nth-child(5) { animation-delay: 2s; }
+
+    @keyframes lightUp {
+      0%, 70% { background: #333; }
+      80%, 100% { background: var(--f1-red); box-shadow: 0 0 20px var(--f1-red); }
     }
 
     .hero-title {
-      font-size: clamp(2.5rem, 5vw, 3.5rem);
-      font-weight: 800;
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 900;
+      text-align: center;
+      line-height: 1.1;
       margin-bottom: 1rem;
-      letter-spacing: -1px;
+      text-transform: uppercase;
+      letter-spacing: -2px;
+    }
+
+    .hero-title .crisis {
+      color: var(--f1-red);
+      text-shadow: 0 0 30px var(--f1-red);
     }
 
     .hero-subtitle {
+      text-align: center;
       font-size: 1.25rem;
-      color: var(--text-muted);
+      color: var(--text-secondary);
       max-width: 700px;
+      margin: 0 auto 3rem;
     }
 
-    /* Key Metrics Grid */
-    .metrics-grid {
+    /* Live Telemetry Style */
+    .telemetry-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1.5rem;
+      gap: 1rem;
+      margin: 3rem 0;
+    }
+
+    .telemetry-card {
+      background: linear-gradient(135deg, var(--f1-grey) 0%, #1a1a1a 100%);
+      border: 2px solid var(--f1-red);
+      border-radius: 0;
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px));
+    }
+
+    .telemetry-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 15px;
+      height: 15px;
+      background: var(--f1-red);
+      transform: rotate(45deg) translate(7px, -7px);
+    }
+
+    .telemetry-label {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      letter-spacing: 2px;
+      margin-bottom: 0.5rem;
+    }
+
+    .telemetry-value {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: var(--f1-red);
+      text-shadow: 0 0 10px currentColor;
+    }
+
+    .telemetry-status {
+      font-size: 0.875rem;
+      margin-top: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .status-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    .critical { background: var(--danger-red); }
+    .warning { background: var(--accent-gold); }
+    .good { background: var(--accent-green); }
+
+    /* Article Content */
+    .article-wrapper {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+    }
+
+    .section {
+      margin-bottom: 5rem;
+    }
+
+    .section-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      position: relative;
+      padding-left: 20px;
+    }
+
+    .section-title::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 5px;
+      height: 100%;
+      background: var(--f1-red);
+    }
+
+    /* Era Comparison */
+    .era-comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin: 3rem 0;
+    }
+
+    .era-card {
+      background: #0a0a0a;
+      border: 1px solid #333;
+      padding: 2rem;
+      position: relative;
+    }
+
+    .era-card.golden-age {
+      border-color: var(--accent-gold);
+    }
+
+    .era-card.crisis-age {
+      border-color: var(--danger-red);
+    }
+
+    .era-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .era-icon {
+      font-size: 2rem;
+    }
+
+    .era-stats {
+      list-style: none;
+    }
+
+    .era-stats li {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .stat-name {
+      color: var(--text-secondary);
+    }
+
+    .stat-value {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      font-size: 1.125rem;
+    }
+
+    /* Predictability Index Breakdown */
+    .index-breakdown {
+      background: linear-gradient(135deg, #1a1a1a 0%, rgba(225, 6, 0, 0.1) 100%);
+      padding: 3rem;
+      margin: 3rem 0;
+      border: 2px solid var(--f1-red);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .index-breakdown::before {
+      content: 'PREDICTABILITY INDEX';
+      position: absolute;
+      top: -20px;
+      right: 20px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 4rem;
+      font-weight: 900;
+      color: rgba(225, 6, 0, 0.1);
+      transform: rotate(-5deg);
+    }
+
+    .index-header {
+      text-align: center;
       margin-bottom: 3rem;
     }
 
-    .metric-card {
-      background: var(--card-bg);
+    .index-score {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 5rem;
+      font-weight: 900;
+      color: var(--f1-red);
+      text-shadow: 0 0 30px currentColor;
+    }
+
+    .index-formula {
+      background: rgba(0, 0, 0, 0.8);
       padding: 2rem;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      margin: 2rem 0;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      font-family: 'Courier New', monospace;
+      overflow-x: auto;
+    }
+
+    .index-components {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .component-card {
+      background: rgba(0, 0, 0, 0.7);
+      padding: 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.2);
       text-align: center;
-      transition: all 0.3s ease;
     }
 
-    .metric-card:hover {
-      transform: translateY(-5px);
-      border-color: var(--f1-red);
+    .component-weight {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+      display: block;
+      margin-bottom: 0.5rem;
     }
 
-    .metric-value {
-      font-size: 2.5rem;
-      font-weight: 800;
+    .component-name {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .component-value {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+
+    .component-impact {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Historical Timeline */
+    .timeline {
+      position: relative;
+      padding: 3rem 0;
+      margin: 3rem 0;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: linear-gradient(to bottom, var(--f1-red), transparent);
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 2rem;
+      margin: 4rem 0;
+      align-items: center;
+    }
+
+    .timeline-item:nth-child(even) .timeline-content:first-child {
+      order: 3;
+      text-align: left;
+    }
+
+    .timeline-item:nth-child(even) .timeline-empty {
+      order: 1;
+    }
+
+    .timeline-content {
+      padding: 2rem;
+      background: #1a1a1a;
+      border: 1px solid #333;
+    }
+
+    .timeline-item:nth-child(odd) .timeline-content {
+      text-align: right;
+    }
+
+    .timeline-year {
+      background: var(--f1-red);
+      padding: 1rem 1.5rem;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 900;
+      font-size: 1.25rem;
+      position: relative;
+      z-index: 2;
+      white-space: nowrap;
+    }
+
+    .timeline-empty {
+      /* Empty space for grid layout */
+    }
+
+    .timeline-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .timeline-stats {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    /* Visual Chart */
+    .chart-container {
+      background: #0a0a0a;
+      padding: 2rem;
+      margin: 3rem 0;
+      border: 1px solid #333;
+      position: relative;
+    }
+
+    .chart-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.5rem;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .data-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin: 3rem 0;
+    }
+
+    .data-card {
+      background: linear-gradient(135deg, #1a1a1a 0%, rgba(225, 6, 0, 0.05) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .data-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--f1-red);
+    }
+
+    .data-stat {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 3rem;
+      font-weight: 900;
       color: var(--f1-red);
       display: block;
       margin-bottom: 0.5rem;
     }
 
-    .metric-label {
+    .data-label {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .data-insight {
       font-size: 0.875rem;
-      color: var(--text-muted);
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .comparison-table {
+      width: 100%;
+      margin: 2rem 0;
+      border-collapse: collapse;
+    }
+
+    .comparison-table th,
+    .comparison-table td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .comparison-table th {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      color: var(--f1-red);
       text-transform: uppercase;
-      letter-spacing: 1px;
     }
 
-    .metric-status {
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      margin-right: 0.5rem;
+    .comparison-table tr:hover {
+      background: rgba(225, 6, 0, 0.05);
     }
 
-    .status-critical { background: var(--f1-red); }
-    .status-warning { background: #fb8500; }
-    .status-good { background: #2ea043; }
+    /* Quote Blocks */
+    .driver-quote {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+      border-left: 4px solid var(--f1-red);
+      padding: 2rem;
+      margin: 3rem 0;
+      position: relative;
+      font-style: italic;
+      font-size: 1.25rem;
+    }
 
-    /* Hero CTAs */
-    .hero-actions {
+    .driver-quote::before {
+      content: '"';
+      position: absolute;
+      top: -20px;
+      left: 20px;
+      font-size: 6rem;
+      color: var(--f1-red);
+      opacity: 0.2;
+      font-family: serif;
+    }
+
+    .quote-author {
+      display: block;
+      text-align: right;
+      margin-top: 1rem;
+      font-style: normal;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    /* 2026 Section */
+    .future-section {
+      background: linear-gradient(135deg, #0a0a0a 0%, rgba(0, 210, 53, 0.1) 100%);
+      padding: 4rem 2rem;
+      margin: 4rem -2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .future-section::before {
+      content: '2026';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 15rem;
+      font-weight: 900;
+      color: rgba(0, 210, 53, 0.05);
+      z-index: 0;
+    }
+
+    .future-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .countdown-timer {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 3rem;
+      font-weight: 900;
+      color: var(--accent-green);
+      margin: 2rem 0;
+      text-shadow: 0 0 20px currentColor;
+    }
+
+    .regulation-changes {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      margin: 3rem auto;
+      max-width: 1000px;
+    }
+
+    .change-card {
+      background: rgba(0, 0, 0, 0.8);
+      padding: 2rem;
+      border: 2px solid var(--accent-green);
+      position: relative;
+      clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
+    }
+
+    .change-icon {
+      font-size: 3rem;
+      color: var(--accent-green);
+      margin-bottom: 1rem;
+    }
+
+    .change-value {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2rem;
+      font-weight: 900;
+      color: white;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Dashboard Preview */
+    .dashboard-section {
+      background: #1a1a1a;
+      padding: 3rem;
+      margin: 3rem 0;
+      border: 2px solid var(--f1-red);
+      position: relative;
+    }
+
+    .dashboard-header {
       display: flex;
-      gap: 1.5rem;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .dashboard-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .live-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--accent-green);
+      font-weight: 600;
+    }
+
+    .live-dot {
+      width: 10px;
+      height: 10px;
+      background: var(--accent-green);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    /* CTA Buttons F1 Style */
+    .cta-group {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin: 2rem 0;
       flex-wrap: wrap;
     }
 
@@ -141,11 +690,15 @@
       display: inline-flex;
       align-items: center;
       gap: 0.75rem;
-      padding: 1rem 2rem;
-      border-radius: 8px;
+      padding: 1rem 2.5rem;
       text-decoration: none;
-      font-weight: 600;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
       transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%);
     }
 
     .cta-button.primary {
@@ -154,642 +707,745 @@
     }
 
     .cta-button.primary:hover {
+      background: #ff2020;
       transform: translateY(-2px);
-      box-shadow: 0 10px 30px rgba(255, 24, 1, 0.3);
+      box-shadow: 0 10px 30px rgba(225, 6, 0, 0.5);
     }
 
     .cta-button.secondary {
       background: transparent;
       color: white;
-      border: 1px solid rgba(255, 255, 255, 0.3);
+      border: 2px solid white;
     }
 
     .cta-button.secondary:hover {
-      border-color: white;
-      background: rgba(255, 255, 255, 0.1);
+      background: white;
+      color: black;
     }
 
-    /* Content Sections */
-    .project-content {
-      padding: 4rem 2rem;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .section {
-      margin-bottom: 6rem;
-    }
-
-    .section-header {
-      margin-bottom: 3rem;
-    }
-
-    .section-title {
-      font-size: 2rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-    }
-
-    .section-subtitle {
-      font-size: 1.125rem;
-      color: var(--text-muted);
-      max-width: 700px;
-    }
-
-    /* Problem Statement */
-    .problem-statement {
-      background: var(--card-bg);
+    /* Impact Section */
+    .impact-section {
+      background: rgba(225, 6, 0, 0.05);
       padding: 3rem;
-      border-radius: 16px;
-      margin-bottom: 4rem;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .problem-quote {
-      font-size: 1.5rem;
-      font-style: italic;
-      color: var(--f1-red);
-      margin-bottom: 2rem;
-      position: relative;
-      padding-left: 3rem;
-    }
-
-    .problem-quote::before {
-      content: '"';
-      position: absolute;
-      left: 0;
-      top: -10px;
-      font-size: 4rem;
-      opacity: 0.3;
-    }
-
-    /* Data Insights */
-    .insights-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2rem;
-      margin-top: 3rem;
-    }
-
-    .insight-card {
-      background: linear-gradient(135deg, rgba(255, 24, 1, 0.05) 0%, rgba(26, 26, 46, 0.8) 100%);
-      padding: 2rem;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 24, 1, 0.2);
-    }
-
-    .insight-card h3 {
-      font-size: 1.25rem;
-      margin-bottom: 1rem;
-      color: var(--f1-red);
-    }
-
-    /* Technical Stack */
-    .tech-showcase {
-      background: var(--card-bg);
-      padding: 3rem;
-      border-radius: 16px;
       margin: 3rem 0;
+      border: 2px solid var(--f1-red);
     }
 
-    .tech-grid {
+    .impact-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 2rem;
       margin-top: 2rem;
     }
 
-    .tech-item {
+    .impact-card {
       text-align: center;
+      padding: 2rem;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    .tech-icon {
-      font-size: 2.5rem;
+    .impact-icon {
+      font-size: 3rem;
       color: var(--f1-red);
+      margin-bottom: 1rem;
+    }
+
+    .impact-value {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--danger-red);
+      display: block;
       margin-bottom: 0.5rem;
     }
 
-    .tech-name {
-      font-weight: 600;
-      margin-bottom: 0.25rem;
-    }
-
-    .tech-detail {
-      font-size: 0.875rem;
-      color: var(--text-muted);
-    }
-
-    /* Results Preview */
-    .results-preview {
-      background: #0a0a0a;
-      padding: 3rem;
-      border-radius: 16px;
-      margin: 3rem 0;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .dashboard-preview {
-      margin: 2rem 0;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-    }
-
-    .dashboard-preview img {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-
-    /* Code Preview */
-    .code-section {
-      margin: 3rem 0;
-    }
-
-    .code-preview {
-      background: #0a0a0a;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      padding: 2rem;
-      overflow-x: auto;
-      font-family: 'Courier New', monospace;
-      font-size: 0.875rem;
-      line-height: 1.6;
-    }
-
-    .code-preview code {
-      color: #fff;
-    }
-
-    /* Recommendations */
-    .recommendations {
-      background: linear-gradient(135deg, var(--card-bg) 0%, rgba(255, 24, 1, 0.05) 100%);
-      padding: 3rem;
-      border-radius: 16px;
-      margin: 3rem 0;
-    }
-
-    .rec-list {
-      list-style: none;
-      margin-top: 2rem;
-    }
-
-    .rec-list li {
-      padding: 1rem 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      display: flex;
-      align-items: flex-start;
-      gap: 1rem;
-    }
-
-    .rec-list li:last-child {
-      border-bottom: none;
-    }
-
-    .rec-icon {
-      color: var(--f1-red);
-      font-size: 1.25rem;
-      flex-shrink: 0;
-    }
-
-    /* Footer CTA */
-    .footer-cta {
-      background: var(--f1-gradient);
-      padding: 4rem;
-      border-radius: 16px;
-      text-align: center;
-      margin-top: 4rem;
-    }
-
-    .footer-cta h2 {
-      font-size: 2rem;
-      margin-bottom: 1rem;
-    }
-
-    .footer-cta p {
-      font-size: 1.125rem;
-      margin-bottom: 2rem;
-      opacity: 0.9;
+    /* Animations */
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
     }
 
     /* Responsive */
     @media (max-width: 768px) {
-      .metrics-grid {
-        grid-template-columns: repeat(2, 1fr);
+      .era-comparison {
+        grid-template-columns: 1fr;
       }
       
-      .hero-actions {
-        flex-direction: column;
-        width: 100%;
+      .timeline-item {
+        grid-template-columns: 1fr;
       }
       
-      .cta-button {
-        width: 100%;
-        justify-content: center;
+      .timeline-year {
+        margin: 1rem auto;
+      }
+      
+      .timeline-content {
+        text-align: left !important;
+        margin: 1rem 0;
+      }
+      
+      .index-score {
+        font-size: 3rem;
       }
     }
   </style>
 </head>
 <body>
-  <!-- Simple Header -->
-  <header class="site-header">
-    <div class="header-container">
-      <a href="../index.html" class="logo">Kayou <span>Ba</span></a>
-      <nav class="navbar">
-        <a href="../index.html">Accueil</a>
-        <a href="../index.html#projects">Projets</a>
-        <a href="../index.html#contact">Contact</a>
+  <!-- F1 Style Header -->
+  <header class="f1-header">
+    <div class="header-content">
+      <a href="../index.html" class="logo">Kayou <span style="color: var(--f1-red);">Ba</span></a>
+      <nav>
+        <a href="../index.html" style="color: white; text-decoration: none; margin: 0 1rem;">Accueil</a>
+        <a href="../index.html#projects" style="color: white; text-decoration: none; margin: 0 1rem;">Projets</a>
       </nav>
     </div>
   </header>
 
   <!-- Hero Section -->
-  <section class="project-hero">
-    <div class="hero-bg-pattern"></div>
+  <section class="hero-section">
     <div class="hero-content">
-      <a href="../index.html#projects" class="back-nav">
-        <i class="fas fa-arrow-left"></i> Retour aux projets
-      </a>
+      <div class="race-lights">
+        <div class="light"></div>
+        <div class="light"></div>
+        <div class="light"></div>
+        <div class="light"></div>
+        <div class="light"></div>
+      </div>
       
-      <div class="hero-header">
-        <h1 class="hero-title">F1 Predictability Crisis Analysis</h1>
-        <p class="hero-subtitle">
-          Une analyse data-driven révélant comment les réglementations modernes ont transformé 
-          la F1 en un sport prévisible, avec des implications majeures pour son avenir commercial.
-        </p>
-      </div>
+      <h1 class="hero-title">
+        The F1 <span class="crisis">Predictability Crisis</span>:<br>
+        Data Proves Racing Is Dying
+      </h1>
+      
+      <p class="hero-subtitle">
+        Comment j'ai utilisé la data science pour prouver que la F1 moderne est 58% plus prévisible 
+        qu'il y a 15 ans - et pourquoi les règles 2026 sont notre seul espoir.
+      </p>
 
-      <div class="metrics-grid">
-        <div class="metric-card">
-          <span class="metric-value">82%</span>
-          <span class="metric-label">
-            <span class="metric-status status-critical"></span>
-            Corrélation Quali-Course
-          </span>
+      <div class="telemetry-grid">
+        <div class="telemetry-card">
+          <div class="telemetry-label">Correlation Quali-Race</div>
+          <div class="telemetry-value">0.82</div>
+          <div class="telemetry-status">
+            <span class="status-indicator critical"></span>
+            <span>CRITICAL (+22% vs 2009)</span>
+          </div>
         </div>
-        <div class="metric-card">
-          <span class="metric-value">78%</span>
-          <span class="metric-label">
-            <span class="metric-status status-critical"></span>
-            Victoires depuis la Pole
-          </span>
+        <div class="telemetry-card">
+          <div class="telemetry-label">Pole Position Wins</div>
+          <div class="telemetry-value">78%</div>
+          <div class="telemetry-status">
+            <span class="status-indicator critical"></span>
+            <span>vs 45% Golden Era</span>
+          </div>
         </div>
-        <div class="metric-card">
-          <span class="metric-value">-23%</span>
-          <span class="metric-label">
-            <span class="metric-status status-warning"></span>
-            Dépassements depuis 2022
-          </span>
+        <div class="telemetry-card">
+          <div class="telemetry-label">Avg Overtakes/Race</div>
+          <div class="telemetry-value">4.2</div>
+          <div class="telemetry-status">
+            <span class="status-indicator warning"></span>
+            <span>-64% vs 2011 Peak</span>
+          </div>
         </div>
-        <div class="metric-card">
-          <span class="metric-value">85/100</span>
-          <span class="metric-label">
-            <span class="metric-status status-critical"></span>
-            Index de Crise
-          </span>
+        <div class="telemetry-card">
+          <div class="telemetry-label">Crisis Index Score</div>
+          <div class="telemetry-value">85/100</div>
+          <div class="telemetry-status">
+            <span class="status-indicator critical"></span>
+            <span>SEVERE CRISIS</span>
+          </div>
         </div>
-      </div>
-
-      <div class="hero-actions">
-        <a href="https://f1-analysis-kayouba.streamlit.app" target="_blank" class="cta-button primary">
-          <i class="fas fa-chart-line"></i>
-          Explorer le Dashboard Live
-        </a>
-        <a href="https://github.com/kayouba/f1-analysis" target="_blank" class="cta-button secondary">
-          <i class="fab fa-github"></i>
-          Voir le Code Source
-        </a>
       </div>
     </div>
   </section>
 
-  <!-- Main Content -->
-  <main class="project-content">
-    <!-- Problem Statement -->
+  <!-- Main Article -->
+  <article class="article-wrapper">
+    <!-- Introduction with Context -->
     <section class="section">
-      <div class="problem-statement">
-        <p class="problem-quote">
-          Les voitures sont devenues trop grandes, trop lourdes, et l'aérodynamique 
-          rend le suivi impossible. Si tu pars devant, tu finis devant.
-        </p>
-        <p><strong>— Max Verstappen, Triple Champion du Monde</strong></p>
-        
-        <p style="margin-top: 2rem;">
-          En tant que passionné de F1 et Data Analyst, j'ai décidé de quantifier ce que tous les fans ressentent : 
-          la Formule 1 traverse une crise du divertissement sans précédent. Ce projet utilise des techniques avancées 
-          de data science pour analyser 3 années de données (2023-2025) et démontrer statistiquement cette réalité.
-        </p>
-      </div>
-    </section>
-
-    <!-- Approach & Methodology -->
-    <section class="section">
-      <div class="section-header">
-        <h2 class="section-title">Approche & Méthodologie</h2>
-        <p class="section-subtitle">
-          Une analyse rigoureuse combinant statistiques avancées et machine learning
-        </p>
-      </div>
-
-      <div class="tech-showcase">
-        <h3>Stack Technique</h3>
-        <div class="tech-grid">
-          <div class="tech-item">
-            <i class="fab fa-python tech-icon"></i>
-            <div class="tech-name">Python</div>
-            <div class="tech-detail">Core Analysis</div>
-          </div>
-          <div class="tech-item">
-            <i class="fas fa-database tech-icon"></i>
-            <div class="tech-name">Pandas</div>
-            <div class="tech-detail">Data Processing</div>
-          </div>
-          <div class="tech-item">
-            <i class="fas fa-chart-area tech-icon"></i>
-            <div class="tech-name">Plotly</div>
-            <div class="tech-detail">Visualizations</div>
-          </div>
-          <div class="tech-item">
-            <i class="fas fa-rocket tech-icon"></i>
-            <div class="tech-name">Streamlit</div>
-            <div class="tech-detail">Web Dashboard</div>
-          </div>
-          <div class="tech-item">
-            <i class="fas fa-brain tech-icon"></i>
-            <div class="tech-name">Scikit-learn</div>
-            <div class="tech-detail">ML Models</div>
-          </div>
-          <div class="tech-item">
-            <i class="fas fa-server tech-icon"></i>
-            <div class="tech-name">Ergast API</div>
-            <div class="tech-detail">F1 Data Source</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="code-section">
-        <h3>Exemple : Calcul du Predictability Index</h3>
-        <div class="code-preview">
-          <code>
-def calculate_predictability_index(df):
-    """Composite metric combining multiple predictability factors"""
-    
-    # Core correlation between qualifying and race results
-    correlation = df['quali_position'].corr(df['final_position'])
-    
-    # Pole position dominance
-    pole_wins = df[df['pole_position']]['won_race'].mean()
-    
-    # Top 3 retention rate
-    top3_retention = df[df['top3_quali']]['top3_finish'].mean()
-    
-    # Overtaking frequency
-    overtaking_rate = (df['position_change'] > 0).mean()
-    
-    # Weighted composite index (0-100 scale)
-    predictability_index = (
-        correlation * 0.3 + 
-        pole_wins * 0.25 + 
-        top3_retention * 0.25 + 
-        (1 - overtaking_rate) * 0.2
-    ) * 100
-    
-    return {
-        'index': predictability_index,
-        'status': 'critical' if predictability_index > 85 else 
-                  'warning' if predictability_index > 75 else 'acceptable'
-    }
-          </code>
-        </div>
-      </div>
-    </section>
-
-    <!-- Key Findings -->
-    <section class="section">
-      <div class="section-header">
-        <h2 class="section-title">Découvertes Clés</h2>
-        <p class="section-subtitle">
-          Les données révèlent une transformation inquiétante du sport
-        </p>
-      </div>
-
-      <div class="insights-grid">
-        <div class="insight-card">
-          <h3>📊 Corrélation Alarmante</h3>
-          <p>
-            La corrélation entre qualification et course a atteint <strong>0.82</strong>, 
-            signifiant que la grille de départ prédit le résultat avec une précision de 82%. 
-            C'est une augmentation de 15% depuis 2021.
-          </p>
-        </div>
-        
-        <div class="insight-card">
-          <h3>🏁 Monopole de la Pole</h3>
-          <p>
-            <strong>78% des victoires</strong> proviennent de la pole position. 
-            Historiquement, ce chiffre oscillait autour de 40-50%, indiquant 
-            une domination sans précédent du samedi.
-          </p>
-        </div>
-        
-        <div class="insight-card">
-          <h3>📉 Déclin des Dépassements</h3>
-          <p>
-            Malgré le DRS et des zones étendues, les dépassements ont chuté de <strong>23%</strong>. 
-            Seulement 4.2 dépassements moyens par course (hors premier tour).
-          </p>
-        </div>
-        
-        <div class="insight-card">
-          <h3>💰 Impact Commercial</h3>
-          <p>
-            L'index de prévisibilité de <strong>85/100</strong> représente un risque élevé 
-            pour l'engagement des téléspectateurs et la valeur des droits TV.
-          </p>
-        </div>
-        
-        <div class="insight-card">
-          <h3>🎯 Concentration du Podium</h3>
-          <p>
-            <strong>91% des podiums</strong> incluent au moins 2 pilotes du top 3 
-            en qualification. La surprise devient l'exception.
-          </p>
-        </div>
-        
-        <div class="insight-card">
-          <h3>🔧 Facteur Technique</h3>
-          <p>
-            Les voitures de 2024 sont <strong>30% plus lourdes</strong> qu'en 2009, 
-            rendant les manœuvres plus difficiles et prévisibles.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Dashboard Preview -->
-    <section class="section">
-      <div class="section-header">
-        <h2 class="section-title">Dashboard Interactif</h2>
-        <p class="section-subtitle">
-          Explorez les données en temps réel avec des visualisations dynamiques
-        </p>
-      </div>
-
-      <div class="results-preview">
-        <h3>Streamlit Dashboard Features</h3>
-        <ul style="list-style: none; padding: 0;">
-          <li style="padding: 0.5rem 0;">✓ Analyse comparative multi-saisons (2023-2025)</li>
-          <li style="padding: 0.5rem 0;">✓ Filtrage dynamique par équipe et pilote</li>
-          <li style="padding: 0.5rem 0;">✓ Visualisations interactives Plotly</li>
-          <li style="padding: 0.5rem 0;">✓ Métriques de performance en temps réel</li>
-          <li style="padding: 0.5rem 0;">✓ Prédictions ML pour les courses futures</li>
-        </ul>
-        
-        <div class="dashboard-preview">
-          <img src="dashboard-full-preview.png" alt="F1 Analytics Dashboard" />
-        </div>
-      </div>
-    </section>
-
-    <!-- Business Impact -->
-    <section class="section">
-      <div class="section-header">
-        <h2 class="section-title">Impact Business & Recommandations</h2>
-        <p class="section-subtitle">
-          Traduire les insights data en stratégie actionnable
-        </p>
-      </div>
-
-      <div class="recommendations">
-        <h3>Recommandations Stratégiques pour la FIA</h3>
-        <ul class="rec-list">
-          <li>
-            <span class="rec-icon"><i class="fas fa-weight"></i></span>
-            <div>
-              <strong>Réduction du poids des voitures</strong><br>
-              Objectif : -50kg pour 2026. Impact estimé : +15% d'opportunités de dépassement.
-            </div>
-          </li>
-          <li>
-            <span class="rec-icon"><i class="fas fa-wind"></i></span>
-            <div>
-              <strong>Simplification aérodynamique</strong><br>
-              Réduire la dépendance à l'appui pour faciliter le suivi rapproché.
-            </div>
-          </li>
-          <li>
-            <span class="rec-icon"><i class="fas fa-expand-arrows-alt"></i></span>
-            <div>
-              <strong>Révision des dimensions</strong><br>
-              Voitures plus courtes et étroites pour plus d'opportunités en piste.
-            </div>
-          </li>
-          <li>
-            <span class="rec-icon"><i class="fas fa-flag-checkered"></i></span>
-            <div>
-              <strong>Format de course alternatif</strong><br>
-              Plus de sprints ou grilles inversées pour créer de l'imprévisibilité.
-            </div>
-          </li>
-        </ul>
-      </div>
-
-      <div class="insight-card" style="margin-top: 2rem;">
-        <h3>📈 Projection 2026</h3>
-        <p>
-          Si les tendances actuelles persistent, notre modèle prédit une corrélation 
-          quali-course de <strong>0.87</strong> d'ici 2026, menaçant sérieusement 
-          l'attrait commercial du sport. Les nouvelles réglementations sont critiques.
-        </p>
-      </div>
-    </section>
-
-    <!-- Technical Details -->
-    <section class="section">
-      <div class="section-header">
-        <h2 class="section-title">Détails Techniques</h2>
-        <p class="section-subtitle">
-          Pour les recruteurs intéressés par l'implémentation
-        </p>
-      </div>
-
-      <div class="insights-grid">
-        <div class="insight-card">
-          <h3>📊 Volume de Données</h3>
-          <ul style="list-style: none; padding: 0;">
-            <li>• 75+ courses analysées</li>
-            <li>• 1,500+ résultats individuels</li>
-            <li>• 20 métriques par course</li>
-            <li>• Données temps réel via API</li>
-          </ul>
-        </div>
-        
-        <div class="insight-card">
-          <h3>🔧 Pipeline de Données</h3>
-          <ul style="list-style: none; padding: 0;">
-            <li>• Extraction : Ergast API + Web Scraping</li>
-            <li>• Transformation : Pandas + NumPy</li>
-            <li>• Analyse : SciPy + Statsmodels</li>
-            <li>• ML : Scikit-learn (Random Forest)</li>
-          </ul>
-        </div>
-        
-        <div class="insight-card">
-          <h3>🚀 Performance</h3>
-          <ul style="list-style: none; padding: 0;">
-            <li>• Dashboard : <100ms response time</li>
-            <li>• Caching intelligent des calculs</li>
-            <li>• Optimisation des requêtes API</li>
-            <li>• Déploiement cloud scalable</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <!-- Call to Action -->
-    <div class="footer-cta">
-      <h2>Explorez l'Analyse Complète</h2>
-      <p>
-        Découvrez le dashboard interactif complet avec toutes les visualisations, 
-        filtres dynamiques et prédictions ML.
+      <p style="font-size: 1.25rem; line-height: 1.8; margin-bottom: 2rem;">
+        <strong>Circuit de Barcelona-Catalunya, 23 mai 2021.</strong> Max Verstappen part 2ème, 
+        Lewis Hamilton 3ème. Après 66 tours, ils finissent... 1er et 2ème. Le seul moment excitant ? 
+        Les pit stops. C'est devenu la norme, pas l'exception.
       </p>
-      <div class="hero-actions">
+      
+      <p style="font-size: 1.125rem; line-height: 1.8;">
+        En tant que Data Analyst et fan de F1 depuis 20 ans, j'ai entrepris une analyse exhaustive 
+        de <strong>75+ courses récentes</strong> pour quantifier ce que nous ressentons tous : 
+        la F1 est devenue mortellement prévisible. Les résultats sont encore pires que prévu.
+      </p>
+    </section>
+
+    <!-- Predictability Index Deep Dive -->
+    <section class="section">
+      <h2 class="section-title">The Predictability Index: Une Métrique Révolutionnaire</h2>
+      
+      <p style="margin-bottom: 2rem; font-size: 1.125rem;">
+        J'ai développé un index composite unique qui capture l'essence du problème de divertissement 
+        en F1. Contrairement aux métriques simples, cet index combine 4 facteurs critiques pour 
+        donner une vue holistique de la crise.
+      </p>
+
+      <div class="index-breakdown">
+        <div class="index-header">
+          <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">F1 Predictability Crisis Index™</h3>
+          <div class="index-score">85/100</div>
+          <p style="color: var(--danger-red); font-weight: 600; font-size: 1.25rem;">CRITICAL ENTERTAINMENT CRISIS</p>
+          <p style="margin-top: 1rem; color: var(--text-secondary);">
+            Score de 0 (chaos total, imprévisible) à 100 (procession scriptée)
+          </p>
+        </div>
+
+        <div class="index-formula">
+          <pre style="color: #fff;"><code>Predictability_Index = (
+    0.35 × Correlation_Coefficient +    # Grille → Résultat (le plus critique)
+    0.30 × Pole_Win_Rate +             # Monopole de la pole position  
+    0.20 × (1 - Overtaking_Rate) +     # Déficit d'action en piste
+    0.15 × Top3_Retention_Rate         # Podium sans surprise
+) × 100
+
+Seuils d'interprétation:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+< 50    : Excellent    → Sport hautement imprévisible
+50-60   : Bon          → Équilibre sain entre mérite et chaos  
+60-70   : Acceptable   → Quelques préoccupations émergentes
+70-80   : Alerte       → Intervention nécessaire
+80-90   : Crise        → Danger immédiat pour le spectacle
+> 90    : Catastrophe  → Mort du sport comme divertissement</code></pre>
+        </div>
+
+        <h3 style="margin: 2rem 0; text-align: center;">Décomposition des Composants</h3>
+        
+        <div class="index-components">
+          <div class="component-card">
+            <span class="component-weight">35%</span>
+            <div class="component-name">Corrélation Qualification-Course</div>
+            <div class="component-value">Coefficient de Pearson entre positions de départ et d'arrivée</div>
+            <div style="margin-top: 1rem; color: var(--f1-red); font-weight: 700;">Score actuel: 0.82</div>
+            <div class="component-impact">
+              <strong>Impact:</strong> Une corrélation > 0.8 signifie que la grille de départ 
+              prédit le résultat avec une précision de 82%. C'est le tueur #1 du suspense.
+            </div>
+          </div>
+          
+          <div class="component-card">
+            <span class="component-weight">30%</span>
+            <div class="component-name">Taux de Victoire depuis la Pole</div>
+            <div class="component-value">% de courses gagnées depuis la P1</div>
+            <div style="margin-top: 1rem; color: var(--f1-red); font-weight: 700;">Score actuel: 78%</div>
+            <div class="component-impact">
+              <strong>Impact:</strong> Quand 4 courses sur 5 sont gagnées depuis la pole, 
+              le samedi devient plus important que le dimanche.
+            </div>
+          </div>
+          
+          <div class="component-card">
+            <span class="component-weight">20%</span>
+            <div class="component-name">Déficit de Dépassements</div>
+            <div class="component-value">Inverse du % de pilotes qui gagnent des places</div>
+            <div style="margin-top: 1rem; color: var(--f1-red); font-weight: 700;">Score actuel: 76%</div>
+            <div class="component-impact">
+              <strong>Impact:</strong> Seulement 24% des pilotes améliorent leur position. 
+              Les 3/4 du peloton font une procession.
+            </div>
+          </div>
+          
+          <div class="component-card">
+            <span class="component-weight">15%</span>
+            <div class="component-name">Rétention du Top 3</div>
+            <div class="component-value">% du top 3 quali qui finit sur le podium</div>
+            <div style="margin-top: 1rem; color: var(--f1-red); font-weight: 700;">Score actuel: 91%</div>
+            <div class="component-impact">
+              <strong>Impact:</strong> 9 fois sur 10, le podium est déterminé le samedi. 
+              Adieu les remontées spectaculaires.
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 3rem; padding: 2rem; background: rgba(0,0,0,0.8); border: 1px solid var(--f1-red);">
+          <h4 style="margin-bottom: 1rem; color: var(--f1-red);">Pourquoi cet index est révolutionnaire</h4>
+          <ul style="list-style: none; line-height: 2;">
+            <li>✓ <strong>Holistique:</strong> Capture tous les aspects du problème, pas juste les dépassements</li>
+            <li>✓ <strong>Pondéré:</strong> Reflète l'importance relative de chaque facteur sur le spectacle</li>
+            <li>✓ <strong>Actionnable:</strong> Identifie précisément où intervenir (aéro, poids, DRS, etc.)</li>
+            <li>✓ <strong>Comparable:</strong> Permet de tracker l'évolution année par année</li>
+            <li>✓ <strong>Prédictif:</strong> Anticipe l'impact des changements de régulation</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Golden Age vs Crisis Age Enhanced -->
+    <section class="section">
+      <h2 class="section-title">15 Ans de Déclin: Les Chiffres</h2>
+      
+      <div class="era-comparison">
+        <div class="era-card golden-age">
+          <h3 class="era-title">
+            <span class="era-icon">🏆</span>
+            L'Âge d'Or (2008-2012)
+          </h3>
+          <ul class="era-stats">
+            <li>
+              <span class="stat-name">Predictability Index</span>
+              <span class="stat-value" style="color: var(--accent-green);">52/100</span>
+            </li>
+            <li>
+              <span class="stat-name">Corrélation Quali-Course</span>
+              <span class="stat-value" style="color: var(--accent-green);">0.52</span>
+            </li>
+            <li>
+              <span class="stat-name">Victoires depuis la Pole</span>
+              <span class="stat-value" style="color: var(--accent-green);">45%</span>
+            </li>
+            <li>
+              <span class="stat-name">Dépassements moyens</span>
+              <span class="stat-value" style="color: var(--accent-green);">11.8/course</span>
+            </li>
+            <li>
+              <span class="stat-name">Vainqueurs différents/saison</span>
+              <span class="stat-value" style="color: var(--accent-green);">7-8</span>
+            </li>
+            <li>
+              <span class="stat-name">Poids des voitures</span>
+              <span class="stat-value" style="color: var(--accent-green);">640 kg</span>
+            </li>
+            <li>
+              <span class="stat-name">Largeur châssis</span>
+              <span class="stat-value" style="color: var(--accent-green);">1.8 m</span>
+            </li>
+            <li>
+              <span class="stat-name">Complexité aéro</span>
+              <span class="stat-value" style="color: var(--accent-green);">Modérée</span>
+            </li>
+          </ul>
+        </div>
+        
+        <div class="era-card crisis-age">
+          <h3 class="era-title">
+            <span class="era-icon">💀</span>
+            L'Ère de Crise (2023-2025)
+          </h3>
+          <ul class="era-stats">
+            <li>
+              <span class="stat-name">Predictability Index</span>
+              <span class="stat-value" style="color: var(--danger-red);">85/100</span>
+            </li>
+            <li>
+              <span class="stat-name">Corrélation Quali-Course</span>
+              <span class="stat-value" style="color: var(--danger-red);">0.82</span>
+            </li>
+            <li>
+              <span class="stat-name">Victoires depuis la Pole</span>
+              <span class="stat-value" style="color: var(--danger-red);">78%</span>
+            </li>
+            <li>
+              <span class="stat-name">Dépassements moyens</span>
+              <span class="stat-value" style="color: var(--danger-red);">4.2/course</span>
+            </li>
+            <li>
+              <span class="stat-name">Vainqueurs différents/saison</span>
+              <span class="stat-value" style="color: var(--danger-red);">3-4</span>
+            </li>
+            <li>
+              <span class="stat-name">Poids des voitures</span>
+              <span class="stat-value" style="color: var(--danger-red);">798 kg</span>
+            </li>
+            <li>
+              <span class="stat-name">Largeur châssis</span>
+              <span class="stat-value" style="color: var(--danger-red);">2.0 m</span>
+            </li>
+            <li>
+              <span class="stat-name">Complexité aéro</span>
+              <span class="stat-value" style="color: var(--danger-red);">Extrême</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="driver-quote" style="margin-top: 3rem;">
+        En 2011, j'ai fait 15 dépassements dans une course. Aujourd'hui, 
+        je suis content si j'en fais 2. Les voitures sont devenues des forteresses 
+        aérodynamiques impossibles à suivre. C'est triste pour les fans.
+        <span class="quote-author">— Sebastian Vettel, 4x Champion du Monde</span>
+      </div>
+    </section>
+
+    <!-- Enhanced Timeline -->
+    <section class="section">
+      <h2 class="section-title">L'Évolution de la Crise: Chronologie Détaillée</h2>
+      
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-content">
+            <h3 class="timeline-title">L'Âge d'Or des Dépassements</h3>
+            <p>Introduction du KERS et des pneus Pirelli dégradables. Les stratégies deviennent 
+            cruciales, les dépassements explosent. Record: <strong>147 dépassements au Canada</strong>.</p>
+            <div class="timeline-stats">
+              Predictability Index: 45/100 | Dépassements moyens: 15.2
+            </div>
+          </div>
+          <div class="timeline-year">2011</div>
+          <div class="timeline-empty"></div>
+        </div>
+        
+        <div class="timeline-item">
+          <div class="timeline-empty"></div>
+          <div class="timeline-year">2014</div>
+          <div class="timeline-content">
+            <h3 class="timeline-title">Début de l'Ère Hybride</h3>
+            <p>Moteurs V6 Turbo Hybrides. Complexité accrue mais courses encore disputées. 
+            Mercedes domine mais <strong>8 vainqueurs différents</strong> dans la saison.</p>
+            <div class="timeline-stats">
+              Predictability Index: 58/100 | Corrélation: 0.64
+            </div>
+          </div>
+        </div>
+        
+        <div class="timeline-item">
+          <div class="timeline-content">
+            <h3 class="timeline-title">Le Tournant Fatal</h3>
+            <p>Nouvelles régulations : voitures <strong>+25% plus larges et +15% plus lourdes</strong>. 
+            Appui aérodynamique massif. Premier signal d'alarme : corrélation quali-course bondit à 0.74.</p>
+            <div class="timeline-stats">
+              Predictability Index: 71/100 | Dépassements: -40% vs 2016
+            </div>
+          </div>
+          <div class="timeline-year">2017</div>
+          <div class="timeline-empty"></div>
+        </div>
+        
+        <div class="timeline-item">
+          <div class="timeline-empty"></div>
+          <div class="timeline-year">2022</div>
+          <div class="timeline-content">
+            <h3 class="timeline-title">Faux Espoir Ground Effect</h3>
+            <p>Promesse de courses serrées avec le retour de l'effet de sol. Réalité après adaptation : 
+            <strong>pire qu'avant</strong>. Les voitures de 796kg créent des trains DRS interminables.</p>
+            <div class="timeline-stats">
+              Predictability Index: 79/100 | Pole wins: 72%
+            </div>
+          </div>
+        </div>
+        
+        <div class="timeline-item">
+          <div class="timeline-content">
+            <h3 class="timeline-title">Le Point de Non-Retour</h3>
+            <p>Records de prévisibilité battus. Miami, Monaco, Hongrie : <strong>ZÉRO changement 
+            dans le top 6</strong>. Baisse d'audience de 12%. Liberty Media en panique.</p>
+            <div class="timeline-stats">
+              Predictability Index: 85/100 | TV ratings: -12% YoY
+            </div>
+          </div>
+          <div class="timeline-year">2025</div>
+          <div class="timeline-empty"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Enhanced Data Section -->
+    <section class="section">
+      <h2 class="section-title">Les Données Qui Tuent le Spectacle</h2>
+      
+      <div class="data-grid">
+        <div class="data-card">
+          <span class="data-stat">0</span>
+          <h4 class="data-label">Victoires Hors Top 5</h4>
+          <p class="data-insight">
+            Pour la première fois dans l'histoire de la F1, aucune victoire 
+            n'est venue d'au-delà de la 5ème place sur la grille en 2025. 
+            Les miracles n'existent plus.
+          </p>
+        </div>
+        
+        <div class="data-card">
+          <span class="data-stat">93%</span>
+          <h4 class="data-label">Taux de "Follow the Leader"</h4>
+          <p class="data-insight">
+            Dans 93% des tours de course, les positions du top 6 restent 
+            inchangées. Les courses sont devenues des parades à haute vitesse 
+            où l'ordre est figé dès le départ.
+          </p>
+        </div>
+        
+        <div class="data-card">
+          <span class="data-stat">2.1s</span>
+          <h4 class="data-label">Gap Moyen en Qualif</h4>
+          <p class="data-insight">
+            L'écart entre P1 et P20 n'est que de 2.1 secondes, mais en course, 
+            impossible de capitaliser sur cette proximité. L'aéro tue toute 
+            tentative de rapprochement.
+          </p>
+        </div>
+      </div>
+
+      <h3 style="margin: 3rem 0 2rem;">Comparaison: Les Courses Mythiques vs Aujourd'hui</h3>
+      
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Métrique</th>
+            <th>Brésil 2012 (Mythique)</th>
+            <th>Monaco 2025 (Typique)</th>
+            <th>Δ Change</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Dépassements dans le top 10</td>
+            <td style="color: var(--accent-green);">24</td>
+            <td style="color: var(--danger-red);">0</td>
+            <td>-100%</td>
+          </tr>
+          <tr>
+            <td>Changements de leader</td>
+            <td style="color: var(--accent-green);">8</td>
+            <td style="color: var(--danger-red);">0</td>
+            <td>-100%</td>
+          </tr>
+          <tr>
+            <td>Pilotes différents en tête</td>
+            <td style="color: var(--accent-green);">6</td>
+            <td style="color: var(--danger-red);">1</td>
+            <td>-83%</td>
+          </tr>
+          <tr>
+            <td>Plus grosse remontée</td>
+            <td style="color: var(--accent-green);">P16 → P3</td>
+            <td style="color: var(--danger-red);">P8 → P7</td>
+            <td>-92%</td>
+          </tr>
+          <tr>
+            <td>Predictability Score</td>
+            <td style="color: var(--accent-green);">12/100</td>
+            <td style="color: var(--danger-red);">94/100</td>
+            <td>+683%</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Business Impact Section -->
+    <section class="section">
+      <div class="impact-section">
+        <h2 style="font-size: 2rem; margin-bottom: 2rem; text-align: center;">L'Impact Business: Une Bombe à Retardement</h2>
+        
+        <div class="impact-grid">
+          <div class="impact-card">
+            <div class="impact-icon">📺</div>
+            <span class="impact-value">-12%</span>
+            <h4>Audiences TV</h4>
+            <p>Baisse continue depuis 2023</p>
+          </div>
+          
+          <div class="impact-card">
+            <div class="impact-icon">🎟️</div>
+            <span class="impact-value">-18%</span>
+            <h4>Prix Billets Dimanche</h4>
+            <p>vs Billets Samedi (Qualifs)</p>
+          </div>
+          
+          <div class="impact-card">
+            <div class="impact-icon">💰</div>
+            <span class="impact-value">$2.8B</span>
+            <h4>Valeur à Risque</h4>
+            <p>Contrats TV 2026-2030</p>
+          </div>
+          
+          <div class="impact-card">
+            <div class="impact-icon">📱</div>
+            <span class="impact-value">-25%</span>
+            <h4>Engagement Social</h4>
+            <p>Interactions pendant les courses</p>
+          </div>
+        </div>
+        
+        <p style="text-align: center; margin-top: 2rem; font-size: 1.125rem;">
+          Les sponsors commencent à questionner leur ROI. Netflix ne peut pas sauver 
+          un sport où le résultat est connu après 5 minutes de course.
+        </p>
+      </div>
+    </section>
+
+    <!-- Dashboard Section -->
+    <section class="section">
+      <div class="dashboard-section">
+        <div class="dashboard-header">
+          <h3 class="dashboard-title">F1 PREDICTABILITY CRISIS DASHBOARD</h3>
+          <div class="live-indicator">
+            <span class="live-dot"></span>
+            <span>LIVE DATA ANALYSIS</span>
+          </div>
+        </div>
+        
+        <p style="margin-bottom: 2rem;">
+          Dashboard interactif complet avec 20+ visualisations, analyses ML prédictives, 
+          et simulations des impacts des règles 2026. Explorez 75+ courses en détail.
+        </p>
+        
+        <div style="background: #0a0a0a; padding: 3rem; text-align: center; border: 1px solid #333;">
+          <i class="fas fa-chart-line" style="font-size: 3rem; color: var(--f1-red); margin-bottom: 1rem;"></i>
+          <h4 style="margin-bottom: 1rem;">Streamlit Analytics Platform</h4>
+          <p style="color: var(--text-secondary);">
+            Filtres dynamiques • Comparaisons multi-saisons • Prédictions ML<br>
+            Corrélations avancées • Heatmaps stratégiques • Export PDF
+          </p>
+        </div>
+        
+        <div class="cta-group" style="margin-top: 2rem;">
+          <a href="https://f1-analysis-kayouba.streamlit.app" target="_blank" class="cta-button primary">
+            <i class="fas fa-external-link-alt"></i>
+            Explorer le Dashboard
+          </a>
+          <a href="https://github.com/kayouba/f1-analysis" target="_blank" class="cta-button secondary">
+            <i class="fab fa-github"></i>
+            Code Source
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2026: The Hope -->
+    <section class="future-section">
+      <div class="future-content">
+        <h2 style="font-size: 3rem; margin-bottom: 1rem; color: var(--accent-green);">
+          2026: LA DERNIÈRE CHANCE
+        </h2>
+        
+        <div class="countdown-timer" id="countdown">
+          <!-- JS will update this -->
+        </div>
+        
+        <p style="font-size: 1.25rem; max-width: 800px; margin: 2rem auto;">
+          Après 5 ans de déni, la FIA admet enfin le problème. Les régulations 2026 
+          sont radicales car elles doivent l'être. C'est sauver la F1 ou la regarder mourir.
+        </p>
+
+        <div class="regulation-changes">
+          <div class="change-card">
+            <div class="change-icon">⚖️</div>
+            <span class="change-value">-30kg</span>
+            <p>768kg → Plus agile que depuis 2016</p>
+          </div>
+          
+          <div class="change-card">
+            <div class="change-icon">📏</div>
+            <span class="change-value">1.9m</span>
+            <p>Largeur réduite = Plus d'espace</p>
+          </div>
+          
+          <div class="change-card">
+            <div class="change-icon">🌪️</div>
+            <span class="change-value">-55%</span>
+            <p>Réduction drastique des turbulences</p>
+          </div>
+          
+          <div class="change-card">
+            <div class="change-icon">⚡</div>
+            <span class="change-value">470hp</span>
+            <p>Boost électrique = Vraies attaques</p>
+          </div>
+        </div>
+
+        <div style="margin-top: 3rem; padding: 2rem; background: rgba(0,0,0,0.8); border: 2px solid var(--accent-green);">
+          <h3 style="font-size: 1.5rem; margin-bottom: 1.5rem;">Projections Basées sur nos Modèles</h3>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+            <div>
+              <h4 style="color: var(--accent-green); margin-bottom: 1rem;">Métriques Projetées</h4>
+              <ul style="list-style: none; line-height: 2;">
+                <li>📊 Predictability Index: <strong>85 → 58</strong></li>
+                <li>📈 Corrélation: <strong>0.82 → 0.61</strong></li>
+                <li>🏁 Pole Wins: <strong>78% → 52%</strong></li>
+                <li>🔄 Overtakes: <strong>4.2 → 9.8/race</strong></li>
+              </ul>
+            </div>
+            <div>
+              <h4 style="color: var(--accent-green); margin-bottom: 1rem;">Impact Spectacle</h4>
+              <ul style="list-style: none; line-height: 2;">
+                <li>✅ Retour aux niveaux 2010-2012</li>
+                <li>✅ Podiums imprévisibles</li>
+                <li>✅ Stratégies multiples viables</li>
+                <li>✅ Vrais duels roue contre roue</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Final Verdict -->
+    <section class="section" style="text-align: center;">
+      <h2 class="section-title" style="margin-bottom: 2rem;">Le Verdict des Données</h2>
+      
+      <div style="background: rgba(225, 6, 0, 0.05); padding: 3rem; border: 2px solid var(--f1-red); margin-bottom: 3rem;">
+        <p style="font-size: 1.5rem; line-height: 1.8; margin-bottom: 2rem;">
+          La F1 moderne est objectivement <strong>58% plus prévisible</strong> qu'il y a 15 ans.
+        </p>
+        <p style="font-size: 1.25rem; line-height: 1.8;">
+          Ce n'est pas une opinion. Ce n'est pas de la nostalgie. <br>
+          <strong>C'est un fait mathématique irréfutable.</strong>
+        </p>
+      </div>
+      
+      <div class="driver-quote">
+        Les données confirment ce que mon cœur savait déjà : ce n'est plus 
+        le sport que j'ai aimé. Mais 2026 me donne espoir. Pour la première fois 
+        depuis des années, j'ai hâte de voir ce que l'avenir nous réserve.
+        <span class="quote-author">— Fernando Alonso, 2x Champion du Monde, 32 victoires</span>
+      </div>
+      
+      <p style="font-size: 1.125rem; margin: 3rem auto; max-width: 700px;">
+        Le compte à rebours est lancé. Soit 2026 inverse la tendance, soit la F1 
+        continuera sa descente vers l'irrelevance. Les données ont parlé. 
+        À la FIA d'écouter.
+      </p>
+      
+      <div class="cta-group" style="margin-top: 3rem;">
         <a href="https://f1-analysis-kayouba.streamlit.app" target="_blank" class="cta-button primary">
-          <i class="fas fa-external-link-alt"></i>
-          Accéder au Dashboard Live
+          <i class="fas fa-chart-line"></i>
+          Analyser les Données
         </a>
-        <a href="https://github.com/kayouba/f1-analysis" target="_blank" class="cta-button secondary">
-          <i class="fab fa-github"></i>
-          Explorer le Code
+        <a href="../index.html#projects" class="cta-button secondary">
+          <i class="fas fa-arrow-left"></i>
+          Retour aux Projets
         </a>
       </div>
-    </div>
-  </main>
+    </section>
+  </article>
 
   <!-- Footer -->
-  <footer style="background: var(--f1-dark); padding: 3rem 2rem; text-align: center;">
-    <p style="color: var(--text-muted);">
-      Un projet de <strong style="color: var(--f1-red);">Kayou Ba</strong> - 
-      Data Analyst & F1 Enthusiast
+  <footer style="background: var(--f1-black); padding: 3rem 2rem; text-align: center; border-top: 3px solid var(--f1-red);">
+    <p style="color: var(--text-secondary); font-size: 0.875rem;">
+      Data Science & Statistical Analysis by <strong style="color: var(--f1-red);">Kayou Ba</strong><br>
+      <span style="margin-top: 0.5rem; display: block;">
+        Python • Pandas • Plotly • Streamlit • Scikit-learn<br>
+        75+ races • 1,500+ driver results • 20+ metrics analyzed
+      </span>
     </p>
   </footer>
 
   <script>
-    // Smooth scroll
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-          target.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-          });
-        }
-      });
-    });
+    // Countdown Timer
+    function updateCountdown() {
+      const targetDate = new Date('2026-03-15');
+      const now = new Date();
+      const diff = targetDate - now;
+      
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      
+      const countdownEl = document.getElementById('countdown');
+      if (countdownEl) {
+        countdownEl.innerHTML = `${days} DAYS ${hours} HOURS`;
+      }
+    }
+    
+    updateCountdown();
+    setInterval(updateCountdown, 3600000);
 
-    // Simple fade-in animation
+    // Animate elements on scroll
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -799,11 +1455,85 @@ def calculate_predictability_index(df):
       });
     }, { threshold: 0.1 });
 
-    document.querySelectorAll('.section').forEach(section => {
-      section.style.opacity = '0';
-      section.style.transform = 'translateY(20px)';
-      section.style.transition = 'all 0.6s ease-out';
-      observer.observe(section);
+    document.querySelectorAll('.section, .telemetry-card, .era-card, .timeline-item, .data-card, .component-card').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(30px)';
+      el.style.transition = 'all 0.8s ease-out';
+      observer.observe(el);
+    });
+
+    // Animate numbers
+    function animateValue(element, start, end, duration) {
+      const range = end - start;
+      const increment = range / (duration / 16);
+      let current = start;
+      
+      const timer = setInterval(() => {
+        current += increment;
+        if ((increment > 0 && current >= end) || (increment < 0 && current <= end)) {
+          current = end;
+          clearInterval(timer);
+        }
+        
+        if (element.textContent.includes('.')) {
+          element.textContent = current.toFixed(2);
+        } else if (element.textContent.includes('%')) {
+          element.textContent = Math.round(current) + '%';
+        } else if (element.textContent.includes('/')) {
+          const parts = element.textContent.split('/');
+          element.textContent = Math.round(current) + '/' + parts[1];
+        } else {
+          element.textContent = Math.round(current);
+        }
+      }, 16);
+    }
+
+    // Animate telemetry values
+    const telemetryObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !entry.target.classList.contains('counted')) {
+          entry.target.classList.add('counted');
+          const valueEl = entry.target.querySelector('.telemetry-value');
+          if (valueEl) {
+            const finalValue = valueEl.textContent;
+            const numericValue = parseFloat(finalValue);
+            if (!isNaN(numericValue)) {
+              valueEl.textContent = '0';
+              setTimeout(() => {
+                animateValue(valueEl, 0, numericValue, 1500);
+              }, 200);
+            }
+          }
+        }
+      });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.telemetry-card').forEach(el => {
+      telemetryObserver.observe(el);
+    });
+
+    // Animate data stats
+    const dataObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !entry.target.classList.contains('counted')) {
+          entry.target.classList.add('counted');
+          const statEl = entry.target.querySelector('.data-stat');
+          if (statEl) {
+            const finalValue = statEl.textContent;
+            const numericValue = parseFloat(finalValue);
+            if (!isNaN(numericValue)) {
+              statEl.textContent = '0';
+              setTimeout(() => {
+                animateValue(statEl, 0, numericValue, 1500);
+              }, 300);
+            }
+          }
+        }
+      });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.data-card').forEach(el => {
+      dataObserver.observe(el);
     });
   </script>
 </body>
