@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Si tu ne marques pas, tu encaisses : le mythe statistique du football | Kayou Ba</title>
-  <meta name="description" content="Test empirique de l'adage le plus célèbre du football sur 70 000 tirs et 10 compétitions. Pipeline complet : Python, statistiques, null model Bernoulli.">
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <meta name="description" content="Projet de football analytics sur le mythe “si tu ne marques pas, tu encaisses” : storytelling, explication du xG, méthodologie statistique et résultats sur 70 000 tirs.">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
@@ -41,8 +41,6 @@
       box-sizing: border-box;
     }
 
-    html { scroll-behavior: smooth; }
-
     body {
       background: var(--bg);
       color: var(--ink);
@@ -66,17 +64,6 @@
       opacity: 0.03;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' /%3E%3C/svg%3E");
       mix-blend-mode: overlay;
-    }
-
-
-    main, section, div, header, footer {
-      position: relative;
-    }
-
-    .hero, .section, .verdict-banner, .cta-section, .football-footer {
-      display: block;
-      visibility: visible;
-      opacity: 1;
     }
 
     /* ═══════════════════════════════════════
@@ -781,6 +768,130 @@
       transform: translateY(0);
     }
 
+
+    /* ═══════════════════════════════════════
+       STORY / EXPLAINER
+       ═══════════════════════════════════════ */
+    .story-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+      gap: 2.5rem;
+      align-items: start;
+      margin-top: 3rem;
+    }
+
+    .story-copy p {
+      color: var(--ink-muted);
+      font-size: 1rem;
+      line-height: 1.8;
+      margin-bottom: 1.25rem;
+      max-width: 760px;
+    }
+
+    .story-copy strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .story-note {
+      background: var(--bg-elevated);
+      border: 1px solid var(--line);
+      padding: 2rem;
+      position: sticky;
+      top: 100px;
+    }
+
+    .story-note-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .story-note h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      line-height: 1;
+    }
+
+    .story-note p {
+      color: var(--ink-muted);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+
+    .story-note p:last-child {
+      margin-bottom: 0;
+    }
+
+    .xg-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+      margin-top: 3rem;
+    }
+
+    .xg-card {
+      background: var(--bg-card);
+      padding: 2rem;
+    }
+
+    .xg-card h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      margin-bottom: 0.75rem;
+    }
+
+    .xg-card p, .xg-card ul {
+      color: var(--ink-muted);
+      font-size: 0.92rem;
+      line-height: 1.7;
+    }
+
+    .xg-card ul {
+      padding-left: 1.1rem;
+      margin-top: 0.8rem;
+    }
+
+    .xg-card li + li {
+      margin-top: 0.45rem;
+    }
+
+    .editorial-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, var(--accent) 50%, transparent 100%);
+      margin: 4rem 0 3rem;
+      opacity: 0.6;
+    }
+
+    .mini-callout {
+      margin-top: 2rem;
+      padding: 1.5rem 1.75rem;
+      border-left: 2px solid var(--accent);
+      background: rgba(212, 255, 0, 0.04);
+    }
+
+    .mini-callout p {
+      margin: 0;
+      color: var(--ink);
+      font-size: 0.98rem;
+      line-height: 1.75;
+    }
+
+
     /* ═══════════════════════════════════════
        RESPONSIVE
        ═══════════════════════════════════════ */
@@ -797,6 +908,8 @@
       .question-card { padding: 2rem 1.5rem; }
       .verdict-text { font-size: 3rem; }
       .header-meta { display: none; }
+      .story-grid { grid-template-columns: 1fr; }
+      .story-note { position: static; }
     }
   </style>
 </head>
@@ -872,11 +985,42 @@
       <div class="section-label">le problème</div>
       <h2 class="section-title">Une croyance universelle, jamais vérifiée.</h2>
       <p class="section-lead">
-        L'adage <em>« si tu ne marques pas, tu encaisses »</em> est probablement la conviction la plus partagée du football mondial. On l'entend en Ligue 1, en Premier League, dans les vestiaires des amateurs, dans les bouches des entraîneurs. C'est devenu une vérité par répétition.
+        L'adage <em>« si tu ne marques pas, tu encaisses »</em> vit partout dans le football. On l'entend sur les plateaux TV, dans les vestiaires, dans les commentaires de matchs et dans les discussions entre supporters. C'est une phrase qui semble vraie parce qu'elle colle parfaitement au récit émotionnel du sport.
       </p>
-      <p class="section-lead">
-        Mais <strong>personne ne l'a jamais vraiment vérifiée</strong>. J'ai donc passé plusieurs semaines à le faire, en construisant un pipeline statistique complet à partir des données ouvertes de StatsBomb.
-      </p>
+
+      <div class="story-grid">
+        <div class="story-copy">
+          <p>
+            Le scénario est connu : une équipe domine, se crée deux ou trois énormes occasions, ne marque pas, puis concède sur la première transition adverse. Le commentateur n'a même pas besoin de réfléchir : la phrase est déjà prête. <strong>Le problème, c'est qu'un récit marquant n'est pas une preuve.</strong>
+          </p>
+          <p>
+            En réalité, notre cerveau retient surtout les séquences douloureuses, spectaculaires, presque morales. Le football adore ces histoires de punition immédiate : tu gâches devant, tu paies derrière. Elles sont simples, mémorables, et elles donnent l'impression d'expliquer le match.
+          </p>
+          <p>
+            J'ai voulu traiter cette phrase comme une vraie hypothèse de recherche. Pas comme une intuition, pas comme une opinion de consultant, mais comme une question mesurable : <strong>rater une grosse occasion augmente-t-il réellement le risque de concéder dans les minutes qui suivent ?</strong>
+          </p>
+          <p>
+            Pour y répondre, j'ai construit un pipeline complet à partir des données ouvertes de StatsBomb, couvrant <strong>70 399 tirs, 2 796 matchs et 10 compétitions</strong>. L'idée n'était pas seulement de regarder si l'adage semble faux ou vrai à première vue, mais de le tester contre plusieurs explications alternatives : score du match, dynamique, variance, régression vers la moyenne, et simple hasard.
+          </p>
+
+          <div class="mini-callout">
+            <p>
+              Ce projet n'est pas seulement une analyse football. C'est aussi une démonstration de méthode : comment passer d'un cliché largement accepté à une conclusion défendable, reproductible et statistiquement robuste.
+            </p>
+          </div>
+        </div>
+
+        <aside class="story-note">
+          <span class="story-note-label">pourquoi ce sujet compte</span>
+          <h3>Le football récompense les récits. La donnée teste la réalité.</h3>
+          <p>
+            Un bon projet data ne consiste pas seulement à produire une jolie visualisation. Il consiste à poser la bonne question, à identifier les biais, puis à construire un cadre d'analyse assez solide pour résister à l'intuition.
+          </p>
+          <p>
+            Ici, le vrai enjeu était de distinguer un effet causal réel d'une illusion statistique très convaincante.
+          </p>
+        </aside>
+      </div>
 
       <div class="question-card">
         <p class="question-quote">
@@ -884,6 +1028,72 @@
         </p>
         <div class="question-source">— tous les commentateurs, tous les matchs</div>
       </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       XG EXPLAINER
+       ═══════════════════════════════════════ -->
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-label">la métrique clé</div>
+      <h2 class="section-title">Le xG, ou comment transformer un tir en probabilité.</h2>
+      <p class="section-lead">
+        Pour tester l'adage sérieusement, il fallait d'abord définir ce qu'est une <strong>grosse occasion</strong>. C'est là qu'intervient le xG, pour <em>expected goals</em>, l'une des métriques les plus utiles — et aussi les plus mal comprises — de l'analytics football.
+      </p>
+
+      <div class="xg-grid">
+        <div class="xg-card">
+          <h3>C'est quoi, concrètement ?</h3>
+          <p>
+            Le xG attribue à chaque tir une probabilité de finir en but. Un tir à 0.40 xG signifie qu'un tir de ce type est converti environ 40 % du temps dans une grande base historique de tirs comparables.
+          </p>
+          <p>
+            Dit autrement : le xG ne prédit pas si <em>ce</em> tir précis va rentrer. Il mesure la qualité moyenne de la situation.
+          </p>
+        </div>
+
+        <div class="xg-card">
+          <h3>Comment c'est calculé ?</h3>
+          <p>
+            Les modèles de xG utilisent des milliers de tirs historiques pour estimer la probabilité de marquer selon plusieurs variables observables :
+          </p>
+          <ul>
+            <li>distance au but</li>
+            <li>angle de tir</li>
+            <li>partie du corps utilisée</li>
+            <li>type de passe précédent</li>
+            <li>type d'action (jeu ouvert, coup de pied arrêté, penalty)</li>
+            <li>pression défensive ou configuration de la séquence, selon les fournisseurs</li>
+          </ul>
+        </div>
+
+        <div class="xg-card">
+          <h3>Pourquoi c'est utile ici ?</h3>
+          <p>
+            Parce que toutes les occasions ratées ne se valent pas. Rater une frappe de 30 mètres n'a pas le même sens que rater un face-à-face à six mètres. Le xG permet de distinguer les occasions banales des vraies opportunités qui, dans le langage courant, alimentent le récit de la « punition ».
+          </p>
+          <p>
+            Dans ce projet, je traite comme grosses occasions les tirs avec <strong>xG ≥ 0.4</strong>.
+          </p>
+        </div>
+
+        <div class="xg-card">
+          <h3>Ses limites</h3>
+          <p>
+            Le xG n'est pas une vérité parfaite. Il simplifie le réel. Deux tirs avec le même xG peuvent ne pas se ressembler totalement à l'œil nu. Il capture très bien la structure moyenne d'une occasion, mais moins bien certains détails fins : qualité exacte du contrôle, vitesse d'exécution, talent exceptionnel du finisseur, placement du gardien au centimètre près.
+          </p>
+          <p>
+            C'est précisément pour cela qu'il faut rester prudent : le xG est un excellent outil d'analyse agrégée, pas un juge absolu sur une action isolée.
+          </p>
+        </div>
+      </div>
+
+      <div class="editorial-divider"></div>
+
+      <p class="section-lead">
+        En résumé : le xG ne dit pas qu'un joueur <em>devait</em> marquer. Il dit qu'une équipe s'est créée une occasion qui, historiquement, se transforme souvent en but. C'est exactement le bon langage pour passer du commentaire subjectif à l'évaluation probabiliste.
+      </p>
     </div>
   </section>
 
