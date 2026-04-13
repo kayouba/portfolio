@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Si tu ne marques pas, tu encaisses : le mythe statistique du football | Kayou Ba</title>
+  <meta name="description" content="Test empirique de l'adage le plus célèbre du football sur 70 000 tirs et 10 compétitions. Pipeline complet : Python, statistiques, null model Bernoulli.">
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <script src="https://kit.fontawesome.com/3b1d4f5a8f.js" crossorigin="anonymous"></script>
+
+  <style>
+
+    :root {
+      --pitch-green: #0d2818;
+      --pitch-line: #1a3d28;
+      --grass: #1e5631;
+      --bg: #0a0e0a;
+      --bg-card: #14181a;
+      --bg-elevated: #1c2125;
+      --ink: #f5f5f0;
+      --ink-muted: #8a9090;
+      --ink-faint: #4a5050;
+      --accent: #d4ff00;
+      --accent-glow: rgba(212, 255, 0, 0.15);
+      --red: #ff3838;
+      --green: #00d97e;
+      --gold: #fbbf24;
+      --line: rgba(255, 255, 255, 0.08);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    ::selection {
+      background: var(--accent);
+      color: var(--bg);
+    }
+
+    /* Grain overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 100;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' /%3E%3C/svg%3E");
+      mix-blend-mode: overlay;
+    }
+
+    /* ═══════════════════════════════════════
+       HEADER
+       ═══════════════════════════════════════ */
+    .football-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(10, 14, 10, 0.92);
+      backdrop-filter: blur(12px);
+      z-index: 1000;
+      border-bottom: 1px solid var(--line);
+      padding: 1.25rem 2rem;
+    }
+
+    .header-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--ink-muted);
+    }
+
+    .header-content a {
+      color: var(--ink-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .header-content a:hover {
+      color: var(--accent);
+    }
+
+    .header-back::before {
+      content: '←  ';
+    }
+
+    .header-meta {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+
+    .header-meta .dot {
+      width: 6px;
+      height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 12px var(--accent);
+      animation: pulse-dot 2s infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    /* ═══════════════════════════════════════
+       HERO
+       ═══════════════════════════════════════ */
+    .hero {
+      margin-top: 60px;
+      min-height: calc(100vh - 60px);
+      position: relative;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at top left, var(--accent-glow) 0%, transparent 50%),
+        radial-gradient(ellipse at bottom right, rgba(255, 56, 56, 0.08) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    /* Pitch lines pattern */
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 80px 80px;
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+      position: relative;
+      z-index: 2;
+      width: 100%;
+    }
+
+    .hero-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--accent);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .hero-tag::before {
+      content: '';
+      width: 32px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3.5rem, 10vw, 9rem);
+      font-weight: 400;
+      line-height: 0.88;
+      letter-spacing: -0.02em;
+      margin-bottom: 2rem;
+      text-transform: uppercase;
+    }
+
+    .hero-title .em {
+      color: var(--accent);
+      font-style: italic;
+    }
+
+    .hero-title .strike {
+      position: relative;
+      display: inline-block;
+    }
+
+    .hero-title .strike::after {
+      content: '';
+      position: absolute;
+      left: -2%;
+      right: -2%;
+      top: 50%;
+      height: 6px;
+      background: var(--red);
+      transform: rotate(-2deg);
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1rem, 1.8vw, 1.35rem);
+      color: var(--ink-muted);
+      max-width: 700px;
+      line-height: 1.5;
+      margin-top: 2rem;
+      font-weight: 300;
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 2rem;
+      margin-top: 4rem;
+      max-width: 900px;
+    }
+
+    .stat-block {
+      border-left: 2px solid var(--accent);
+      padding-left: 1.5rem;
+    }
+
+    .stat-block .number {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3rem;
+      font-weight: 400;
+      line-height: 1;
+      color: var(--ink);
+      letter-spacing: -0.02em;
+    }
+
+    .stat-block .label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--ink-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-top: 0.5rem;
+      display: block;
+    }
+
+    /* ═══════════════════════════════════════
+       VERDICT BANNER
+       ═══════════════════════════════════════ */
+    .verdict-banner {
+      background: var(--red);
+      color: white;
+      padding: 3rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .verdict-banner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 30px,
+        rgba(0, 0, 0, 0.06) 30px,
+        rgba(0, 0, 0, 0.06) 31px
+      );
+      pointer-events: none;
+    }
+
+    .verdict-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 2rem;
+      position: relative;
+    }
+
+    .verdict-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      opacity: 0.9;
+    }
+
+    .verdict-text {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3rem, 8vw, 6rem);
+      letter-spacing: 0.02em;
+      line-height: 1;
+    }
+
+    .verdict-detail {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      border: 1px solid rgba(255,255,255,0.4);
+      padding: 0.75rem 1.25rem;
+      white-space: nowrap;
+    }
+
+    /* ═══════════════════════════════════════
+       SECTIONS
+       ═══════════════════════════════════════ */
+    .section {
+      padding: 8rem 0;
+      position: relative;
+    }
+
+    .section-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--accent);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section-label::before {
+      content: '';
+      width: 24px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: -0.01em;
+      margin-bottom: 2rem;
+      max-width: 900px;
+      text-transform: uppercase;
+    }
+
+    .section-lead {
+      font-size: 1.15rem;
+      line-height: 1.7;
+      color: var(--ink-muted);
+      max-width: 720px;
+      margin-bottom: 3rem;
+      font-weight: 300;
+    }
+
+    .section-lead strong {
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    /* ═══════════════════════════════════════
+       QUESTION CARD
+       ═══════════════════════════════════════ */
+    .question-card {
+      background: var(--bg-elevated);
+      border-left: 3px solid var(--accent);
+      padding: 3rem 3.5rem;
+      margin: 3rem 0;
+      position: relative;
+    }
+
+    .question-card::before {
+      content: '"';
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 8rem;
+      position: absolute;
+      top: -1rem;
+      right: 2rem;
+      color: var(--accent);
+      opacity: 0.2;
+      line-height: 1;
+    }
+
+    .question-quote {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(1.5rem, 3vw, 2.25rem);
+      font-weight: 400;
+      line-height: 1.2;
+      color: var(--ink);
+      max-width: 700px;
+      letter-spacing: 0.01em;
+      text-transform: uppercase;
+    }
+
+    .question-source {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--ink-muted);
+      margin-top: 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    /* ═══════════════════════════════════════
+       METHOD GRID
+       ═══════════════════════════════════════ */
+    .method-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1px;
+      background: var(--line);
+      margin-top: 3rem;
+      border-top: 1px solid var(--line);
+      border-left: 1px solid var(--line);
+    }
+
+    .method-card {
+      background: var(--bg);
+      padding: 2.5rem 2rem;
+      transition: background 0.3s;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .method-card:hover {
+      background: var(--bg-elevated);
+    }
+
+    .method-card.featured {
+      background: linear-gradient(135deg, rgba(212, 255, 0, 0.05) 0%, var(--bg) 100%);
+      border-top: 2px solid var(--accent);
+    }
+
+    .method-number {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.9rem;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      display: block;
+      letter-spacing: 0.1em;
+    }
+
+    .method-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 400;
+      margin-bottom: 0.75rem;
+      letter-spacing: 0.01em;
+      text-transform: uppercase;
+    }
+
+    .method-desc {
+      font-size: 0.875rem;
+      color: var(--ink-muted);
+      line-height: 1.6;
+    }
+
+    /* ═══════════════════════════════════════
+       FINDINGS
+       ═══════════════════════════════════════ */
+    .finding {
+      margin: 6rem 0;
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    .finding-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 5rem;
+      font-weight: 400;
+      color: var(--accent);
+      line-height: 0.85;
+      letter-spacing: -0.02em;
+    }
+
+    .finding-content h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(1.75rem, 3vw, 2.5rem);
+      font-weight: 400;
+      margin-bottom: 1rem;
+      line-height: 1.1;
+      text-transform: uppercase;
+      letter-spacing: 0.01em;
+    }
+
+    .finding-content h3 em {
+      color: var(--accent);
+      font-style: normal;
+    }
+
+    .finding-content p {
+      color: var(--ink-muted);
+      font-size: 1rem;
+      line-height: 1.7;
+      margin-bottom: 1rem;
+      max-width: 700px;
+    }
+
+    .finding-stats {
+      display: flex;
+      gap: 3rem;
+      margin: 2rem 0;
+      padding: 2rem 2.5rem;
+      background: var(--bg-elevated);
+      border-left: 2px solid var(--accent);
+      flex-wrap: wrap;
+    }
+
+    .finding-stat {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .finding-stat .num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: -0.01em;
+    }
+
+    .finding-stat .num.red { color: var(--red); }
+    .finding-stat .num.green { color: var(--green); }
+
+    .finding-stat .lbl {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--ink-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* ═══════════════════════════════════════
+       SKILLS SECTION
+       ═══════════════════════════════════════ */
+    .skills-section {
+      background: var(--bg-elevated);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1px;
+      background: var(--line);
+      margin-top: 3rem;
+      border: 1px solid var(--line);
+    }
+
+    .skill-card {
+      background: var(--bg-elevated);
+      padding: 2rem;
+      display: flex;
+      align-items: start;
+      gap: 1rem;
+      transition: background 0.2s;
+    }
+
+    .skill-card:hover {
+      background: var(--bg-card);
+    }
+
+    .skill-num {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+      border: 1px solid var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .skill-card h4 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 400;
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .skill-card p {
+      font-size: 0.85rem;
+      color: var(--ink-muted);
+      line-height: 1.5;
+    }
+
+    /* ═══════════════════════════════════════
+       STACK
+       ═══════════════════════════════════════ */
+    .stack-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 3rem;
+    }
+
+    .stack-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      padding: 0.625rem 1.25rem;
+      border: 1px solid var(--line);
+      color: var(--ink-muted);
+      transition: all 0.2s;
+    }
+
+    .stack-tag:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-glow);
+    }
+
+    /* ═══════════════════════════════════════
+       CTA
+       ═══════════════════════════════════════ */
+    .cta-section {
+      padding: 8rem 0;
+      text-align: center;
+      border-top: 1px solid var(--line);
+      background: linear-gradient(180deg, var(--bg) 0%, var(--bg-elevated) 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, var(--accent-glow) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .cta-content {
+      position: relative;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .cta-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 400;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.01em;
+    }
+
+    .cta-subtitle {
+      font-size: 1rem;
+      color: var(--ink-muted);
+      margin-bottom: 3rem;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      padding: 1.125rem 2rem;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: 1px solid transparent;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--bg);
+      font-weight: 600;
+    }
+
+    .btn-primary:hover {
+      background: var(--ink);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* ═══════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════ */
+    .football-footer {
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--line);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--ink-muted);
+    }
+
+    .footer-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .football-footer a {
+      color: var(--ink-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .football-footer a:hover {
+      color: var(--accent);
+    }
+
+    /* ═══════════════════════════════════════
+       ANIMATIONS
+       ═══════════════════════════════════════ */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ═══════════════════════════════════════
+       RESPONSIVE
+       ═══════════════════════════════════════ */
+    @media (max-width: 768px) {
+      .section { padding: 5rem 0; }
+      .hero-inner { padding: 2rem 1.5rem; }
+      .hero-stats { gap: 1.5rem; margin-top: 3rem; }
+      .stat-block .number { font-size: 2.25rem; }
+      .finding {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      .finding-num { font-size: 4rem; }
+      .question-card { padding: 2rem 1.5rem; }
+      .verdict-text { font-size: 3rem; }
+      .header-meta { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════
+       HEADER
+       ═══════════════════════════════════════ -->
+  <header class="football-header">
+    <div class="header-content">
+      <a href="../index.html" class="header-back">retour au portfolio</a>
+      <div class="header-meta">
+        <span class="dot"></span>
+        <span>kayou ba · sports analytics · 2025</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════
+       HERO
+       ═══════════════════════════════════════ -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-tag">étude de cas · football analytics</div>
+      <h1 class="hero-title">
+        Si tu ne marques pas,<br>
+        <span class="strike">tu encaisses</span>.<br>
+        <span class="em">vraiment ?</span>
+      </h1>
+      <p class="hero-subtitle">
+        Test empirique de l'adage le plus célèbre du football, à travers 70 000 tirs et 10 compétitions, de 1958 à 2024. Spoiler : c'est un mythe.
+      </p>
+
+      <div class="hero-stats">
+        <div class="stat-block">
+          <div class="number">70 399</div>
+          <span class="label">tirs analysés</span>
+        </div>
+        <div class="stat-block">
+          <div class="number">2 796</div>
+          <span class="label">matchs</span>
+        </div>
+        <div class="stat-block">
+          <div class="number">10</div>
+          <span class="label">compétitions</span>
+        </div>
+        <div class="stat-block">
+          <div class="number">66 ans</div>
+          <span class="label">de données</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       VERDICT
+       ═══════════════════════════════════════ -->
+  <div class="verdict-banner">
+    <div class="verdict-inner">
+      <div>
+        <div class="verdict-label">verdict après analyse</div>
+        <div class="verdict-text">Mythe.</div>
+      </div>
+      <div class="verdict-detail">p &gt; 0.05 · null model bernoulli</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       LE PROBLÈME
+       ═══════════════════════════════════════ -->
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-label">le problème</div>
+      <h2 class="section-title">Une croyance universelle, jamais vérifiée.</h2>
+      <p class="section-lead">
+        L'adage <em>« si tu ne marques pas, tu encaisses »</em> est probablement la conviction la plus partagée du football mondial. On l'entend en Ligue 1, en Premier League, dans les vestiaires des amateurs, dans les bouches des entraîneurs. C'est devenu une vérité par répétition.
+      </p>
+      <p class="section-lead">
+        Mais <strong>personne ne l'a jamais vraiment vérifiée</strong>. J'ai donc passé plusieurs semaines à le faire, en construisant un pipeline statistique complet à partir des données ouvertes de StatsBomb.
+      </p>
+
+      <div class="question-card">
+        <p class="question-quote">
+          Quand tu ne marques pas ces occasions-là, tu sais ce qui se passe derrière…
+        </p>
+        <div class="question-source">— tous les commentateurs, tous les matchs</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       MÉTHODE
+       ═══════════════════════════════════════ -->
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-label">la méthode</div>
+      <h2 class="section-title">Sept couches de vérification.</h2>
+      <p class="section-lead">
+        Une approche multi-couches pour garantir la robustesse de la conclusion. Chaque méthode contrôle un type de biais différent — du plus simple test descriptif au null model Bernoulli, qui est la pièce maîtresse du projet.
+      </p>
+
+      <div class="method-grid">
+        <div class="method-card">
+          <span class="method-number">01</span>
+          <h3 class="method-title">Event study</h3>
+          <p class="method-desc">Comparaison traité (équipes qui gaspillent) vs contrôle, sur des fenêtres futures de 5, 10 et 15 minutes.</p>
+        </div>
+        <div class="method-card">
+          <span class="method-number">02</span>
+          <h3 class="method-title">Stratification</h3>
+          <p class="method-desc">Test refait séparément selon le score (mène, égalité, perd) pour éliminer le confounding du contexte.</p>
+        </div>
+        <div class="method-card">
+          <span class="method-number">03</span>
+          <h3 class="method-title">Test de permutation</h3>
+          <p class="method-desc">10 000 itérations non-paramétriques pour valider sans hypothèse distributionnelle.</p>
+        </div>
+        <div class="method-card">
+          <span class="method-number">04</span>
+          <h3 class="method-title">Tests multiples</h3>
+          <p class="method-desc">Correction Benjamini-Hochberg pour éviter les faux positifs sur les seuils testés.</p>
+        </div>
+        <div class="method-card">
+          <span class="method-number">05</span>
+          <h3 class="method-title">Régression logistique</h3>
+          <p class="method-desc">Avec clustered standard errors par match pour contrôler l'autocorrélation au sein d'un même jeu.</p>
+        </div>
+        <div class="method-card">
+          <span class="method-number">06</span>
+          <h3 class="method-title">Cross-validation</h3>
+          <p class="method-desc">GroupKFold par match pour mesurer le vrai pouvoir prédictif (AUC, Brier score) sans data leakage.</p>
+        </div>
+        <div class="method-card featured">
+          <span class="method-number">07 · le test décisif</span>
+          <h3 class="method-title">Null model Bernoulli</h3>
+          <p class="method-desc">500 simulations d'un univers où chaque tir se convertit au pur hasard. Permet de séparer un vrai effet de la régression vers la moyenne.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       RÉSULTATS
+       ═══════════════════════════════════════ -->
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-label">résultats</div>
+      <h2 class="section-title">Cinq découvertes contre-intuitives.</h2>
+
+      <!-- Finding 1 -->
+      <div class="finding">
+        <div class="finding-num">01</div>
+        <div class="finding-content">
+          <h3>La <em>« malédiction »</em> de l'occasion ratée n'existe pas.</h3>
+          <p>
+            Après une grosse occasion ratée (xG ≥ 0.4), l'équipe ne devient pas plus vulnérable. La différence avec une occasion marquée est statistiquement nulle.
+          </p>
+          <div class="finding-stats">
+            <div class="finding-stat">
+              <span class="num red">9.9%</span>
+              <span class="lbl">après occasion ratée</span>
+            </div>
+            <div class="finding-stat">
+              <span class="num green">9.3%</span>
+              <span class="lbl">après occasion marquée</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Finding 2 -->
+      <div class="finding">
+        <div class="finding-num">02</div>
+        <div class="finding-content">
+          <h3>Rater un penalty te <em>protège</em>.</h3>
+          <p>
+            La stat la plus contre-intuitive du projet. Sur 658 penalties analysés, l'équipe qui rate concède presque deux fois moins que celle qui marque. La raison : marquer force l'adversaire à pousser et à se découvrir.
+          </p>
+          <div class="finding-stats">
+            <div class="finding-stat">
+              <span class="num red">5.2%</span>
+              <span class="lbl">après penalty raté</span>
+            </div>
+            <div class="finding-stat">
+              <span class="num green">8.7%</span>
+              <span class="lbl">après penalty marqué</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Finding 3 -->
+      <div class="finding">
+        <div class="finding-num">03</div>
+        <div class="finding-content">
+          <h3>Le <em>« siège »</em> ne casse pas les défenses.</h3>
+          <p>
+            Que l'équipe ait tiré 0 ou 10+ fois sans marquer d'affilée, son risque de concéder reste plat autour de la moyenne (~14 %). Le récit du « siège qui finit en contre fatal » ne tient pas face aux données.
+          </p>
+        </div>
+      </div>
+
+      <!-- Finding 4 -->
+      <div class="finding">
+        <div class="finding-num">04</div>
+        <div class="finding-content">
+          <h3>Le résultat tient <em>partout</em>.</h3>
+          <p>
+            Forest plot sur 10 compétitions, de 1958 à 2024 : 7 montrent un effet négatif (gaspiller protège même légèrement), aucune ne montre d'effet positif significatif. La Liga, Premier League, Serie A, Bundesliga, Ligue 1, Coupe du Monde — l'adage est faux <em>partout</em>.
+          </p>
+        </div>
+      </div>
+
+      <!-- Finding 5 -->
+      <div class="finding">
+        <div class="finding-num">05</div>
+        <div class="finding-content">
+          <h3>Un cas d'école du <em>paradoxe de Simpson</em>.</h3>
+          <p>
+            Au niveau équipe, on observe une corrélation positive (r = 0.31) entre gaspillage et concession. Mais elle <em>disparaît</em> dès qu'on analyse minute par minute au sein d'un même match. La corrélation au niveau global reflète la force globale de l'équipe — pas un mécanisme causal.
+          </p>
+          <p>
+            Le piège statistique le plus élégant du foot, et la raison principale pour laquelle l'adage semble vrai à l'œil nu.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       COMPÉTENCES
+       ═══════════════════════════════════════ -->
+  <section class="section skills-section">
+    <div class="section-inner">
+      <div class="section-label">ce que ce projet démontre</div>
+      <h2 class="section-title">Six compétences en action.</h2>
+      <p class="section-lead">
+        Pour un scan rapide : voici les compétences mises en évidence et où les retrouver dans le repo GitHub.
+      </p>
+
+      <div class="skills-grid">
+        <div class="skill-card">
+          <div class="skill-num">01</div>
+          <div>
+            <h4>Pipeline end-to-end</h4>
+            <p>De la collecte d'API à la figure publication-ready, en passant par le nettoyage, le feature engineering et la modélisation.</p>
+          </div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-num">02</div>
+          <div>
+            <h4>Rigueur statistique</h4>
+            <p>Correction pour tests multiples, clustered standard errors, GroupKFold cross-validation, tests non-paramétriques.</p>
+          </div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-num">03</div>
+          <div>
+            <h4>Pensée causale</h4>
+            <p>Stratification, conscience du paradoxe de Simpson, null models, distinction entre corrélation et causalité.</p>
+          </div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-num">04</div>
+          <div>
+            <h4>Qualité du code</h4>
+            <p>Code modulaire orienté objet, type hints, logging structuré, tests unitaires, configuration centralisée via YAML.</p>
+          </div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-num">05</div>
+          <div>
+            <h4>Communication</h4>
+            <p>Visualisations publication-ready, narration data-driven, capacité à transformer une analyse complexe en histoire claire.</p>
+          </div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-num">06</div>
+          <div>
+            <h4>Connaissance métier</h4>
+            <p>Sémantique du xG, compréhension des confounders propres au football, raisonnement tactique.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       STACK
+       ═══════════════════════════════════════ -->
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-label">stack technique</div>
+      <h2 class="section-title">Python scientifique, pipeline reproductible.</h2>
+
+      <div class="stack-grid">
+        <div class="stack-tag">Python 3.9+</div>
+        <div class="stack-tag">pandas</div>
+        <div class="stack-tag">numpy</div>
+        <div class="stack-tag">scipy</div>
+        <div class="stack-tag">statsmodels</div>
+        <div class="stack-tag">scikit-learn</div>
+        <div class="stack-tag">lifelines</div>
+        <div class="stack-tag">matplotlib</div>
+        <div class="stack-tag">seaborn</div>
+        <div class="stack-tag">statsbombpy</div>
+        <div class="stack-tag">jupyter</div>
+        <div class="stack-tag">git</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       CTA
+       ═══════════════════════════════════════ -->
+  <section class="cta-section">
+    <div class="cta-content">
+      <h2 class="cta-title">Voir le projet en détail.</h2>
+      <p class="cta-subtitle">7 notebooks Jupyter, 15 figures, et tout le code source en open source.</p>
+      <div class="cta-buttons">
+        <a href="https://github.com/kayouba/football-underperformance" target="_blank" class="btn btn-primary">
+          <i class="fab fa-github"></i> github →
+        </a>
+        <a href="../index.html#projects" class="btn btn-secondary">
+          <i class="fas fa-arrow-left"></i> retour aux projets
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════ -->
+  <footer class="football-footer">
+    <div class="footer-inner">
+      <div>© 2025 Kayou Ba · Données : StatsBomb Open Data</div>
+      <div>
+        <a href="https://kayouba.pro">portfolio</a> ·
+        <a href="https://github.com/kayouba">github</a> ·
+        <a href="https://linkedin.com/in/kayouba">linkedin</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Fade-in on scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.finding, .method-card, .skill-card, .stat-block').forEach(el => {
+      el.classList.add('fade-in');
+      observer.observe(el);
+    });
+  </script>
+
+</body>
+</html>
