@@ -5,490 +5,247 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Coupe du Monde 2026 : décoder le nouveau format | Kayou Ba</title>
   <meta name="description" content="Simulation de 50 000 phases de groupes pour comprendre combien de points il faut pour se qualifier comme meilleur troisième dans le nouveau format à 48 équipes de la Coupe du Monde 2026.">
-  <link rel="stylesheet" href="../style.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
-  <script src="https://kit.fontawesome.com/3b1d4f5a8f.js" crossorigin="anonymous"></script>
 
   <style>
-    /* ═══════════════════════════════════════
-       WORLD CUP 2026 DESIGN SYSTEM
-       Style editorial sport, coherent avec la page football
-       ═══════════════════════════════════════ */
-    :root {
-      --bg: #0a0e0a;
-      --bg-card: #14181a;
-      --bg-elevated: #1c2125;
-      --ink: #f5f5f0;
-      --ink-muted: #8a9090;
-      --ink-faint: #4a5050;
-      --accent: #d4ff00;
-      --accent-glow: rgba(212, 255, 0, 0.15);
-      --red: #ff3838;
-      --green: #00d97e;
-      --amber: #ffb300;
-      --line: rgba(255, 255, 255, 0.08);
+    /* Page autonome : aucune dependance a style.css du portfolio.
+       Tout est prefixe .wc26- pour eviter les conflits. */
+    .wc26-root {
+      --bg: #05140d; --bg2: #0a2018; --card: #0d2a1e; --cardhi: #123727;
+      --ink: #f7f5ee; --muted: #9db0a5; --faint: #5a6b62;
+      --pitch: #21d177; --gold: #ffd24a; --red: #e8463f; --blue: #3b8cff;
+      --line: rgba(255,255,255,0.1);
+      background: var(--bg); color: var(--ink);
+      font-family: 'Inter', sans-serif; line-height: 1.6;
+      overflow-x: hidden; min-height: 100vh;
     }
+    .wc26-root * { margin: 0; padding: 0; box-sizing: border-box; }
+    .wc26-root ::selection { background: var(--pitch); color: var(--bg); }
+    .wc26-wrap { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      background: var(--bg);
-      color: var(--ink);
-      font-family: 'Inter', sans-serif;
-      line-height: 1.6;
-      overflow-x: hidden;
-    }
-
-    ::selection { background: var(--accent); color: var(--bg); }
-
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 100;
-      opacity: 0.03;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' /%3E%3C/svg%3E");
-      mix-blend-mode: overlay;
-    }
-
-    /* HEADER */
-    .wc-header {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      background: rgba(10, 14, 10, 0.92);
-      backdrop-filter: blur(12px);
-      z-index: 1000;
-      border-bottom: 1px solid var(--line);
-      padding: 1.25rem 2rem;
-    }
-    .header-content {
-      max-width: 1400px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.8rem;
-      color: var(--ink-muted);
-    }
-    .header-content a { color: var(--ink-muted); text-decoration: none; transition: color 0.2s; }
-    .header-content a:hover { color: var(--accent); }
-    .header-back::before { content: '←  '; }
-    .header-meta { display: flex; gap: 1.5rem; align-items: center; }
-    .header-meta .dot {
-      width: 6px; height: 6px; background: var(--accent); border-radius: 50%;
-      box-shadow: 0 0 12px var(--accent); animation: pulse-dot 2s infinite;
-    }
-    @keyframes pulse-dot { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+    /* TOPBAR */
+    .wc26-top { position: sticky; top: 0; z-index: 100; background: rgba(5,20,13,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); padding: 1rem 2rem; }
+    .wc26-top-in { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--muted); }
+    .wc26-top a { color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    .wc26-top a:hover { color: var(--pitch); }
+    .wc26-back::before { content: '\2190  '; }
+    .wc26-meta { display: flex; gap: 0.5rem; align-items: center; }
+    .wc26-pin { color: var(--gold); }
 
     /* HERO */
-    .hero {
-      margin-top: 60px;
-      min-height: calc(100vh - 60px);
-      position: relative;
-      display: flex;
-      align-items: center;
-      overflow: hidden;
-    }
-    .hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(ellipse at top left, var(--accent-glow) 0%, transparent 50%),
-        radial-gradient(ellipse at bottom right, rgba(0, 217, 126, 0.08) 0%, transparent 50%);
-      pointer-events: none;
-    }
-    .hero::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
-      background-size: 80px 80px;
-      pointer-events: none;
-    }
-    .hero-inner {
-      max-width: 1400px; margin: 0 auto; padding: 4rem 2rem;
-      position: relative; z-index: 2; width: 100%;
-    }
-    .hero-tag {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem; color: var(--accent);
-      letter-spacing: 0.2em; text-transform: uppercase;
-      margin-bottom: 2rem; display: flex; align-items: center; gap: 0.75rem;
-    }
-    .hero-tag::before { content: ''; width: 32px; height: 1px; background: var(--accent); }
-    .hero-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(3.5rem, 10vw, 9rem);
-      font-weight: 400; line-height: 0.88;
-      letter-spacing: -0.02em; margin-bottom: 2rem; text-transform: uppercase;
-    }
-    .hero-title .em { color: var(--accent); }
-    .hero-subtitle {
-      font-size: clamp(1rem, 1.8vw, 1.35rem);
-      color: var(--ink-muted); max-width: 720px;
-      line-height: 1.5; margin-top: 2rem; font-weight: 300;
-    }
-    .hero-stats {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 2rem; margin-top: 4rem; max-width: 900px;
-    }
-    .stat-block { border-left: 2px solid var(--accent); padding-left: 1.5rem; }
-    .stat-block .number {
-      font-family: 'Bebas Neue', sans-serif; font-size: 3rem;
-      font-weight: 400; line-height: 1; color: var(--ink); letter-spacing: -0.02em;
-    }
-    .stat-block .label {
-      font-family: 'JetBrains Mono', monospace; font-size: 0.7rem;
-      color: var(--ink-muted); text-transform: uppercase;
-      letter-spacing: 0.1em; margin-top: 0.5rem; display: block;
-    }
+    .wc26-hero { position: relative; padding: 6rem 0 5rem; overflow: hidden; background: radial-gradient(circle at 80% 10%, rgba(33,209,119,0.12) 0%, transparent 45%), radial-gradient(circle at 10% 90%, rgba(255,210,74,0.08) 0%, transparent 40%); }
+    .wc26-lines { position: absolute; inset: 0; pointer-events: none; }
+    .wc26-lines::before { content: ''; position: absolute; right: -120px; top: 50%; transform: translateY(-50%); width: 420px; height: 420px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.05); }
+    .wc26-lines::after { content: ''; position: absolute; right: -260px; top: 0; bottom: 0; width: 2px; background: rgba(255,255,255,0.05); }
+    .wc26-hero-in { position: relative; z-index: 2; }
+    .wc26-badges { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; }
+    .wc26-badge { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; padding: 0.5rem 0.9rem; border-radius: 100px; background: rgba(33,209,119,0.12); color: var(--pitch); border: 1px solid rgba(33,209,119,0.3); }
+    .wc26-hosts { display: flex; gap: 0.4rem; align-items: center; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--faint); }
+    .wc26-hostdot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+    .wc26-hero h1 { font-family: 'Archivo Black', sans-serif; font-size: clamp(2.6rem, 7vw, 6rem); line-height: 0.98; letter-spacing: -0.02em; text-transform: uppercase; margin-bottom: 1.5rem; color: var(--ink); }
+    .wc26-hl { color: var(--bg); background: var(--pitch); padding: 0 0.2em; display: inline-block; transform: rotate(-1deg); }
+    .wc26-lead { font-size: clamp(1.05rem, 1.6vw, 1.3rem); color: var(--muted); max-width: 680px; font-weight: 300; line-height: 1.55; }
+    .wc26-hstats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3.5rem; max-width: 720px; }
+    .wc26-hstat { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 1.5rem; }
+    .wc26-hstat .n { font-family: 'Archivo Black', sans-serif; font-size: 2.3rem; line-height: 1; color: var(--pitch); margin-bottom: 0.4rem; }
+    .wc26-hstat .l { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
 
-    /* VERDICT BANNER */
-    .verdict-banner {
-      background: var(--accent); color: var(--bg);
-      padding: 3rem 0; position: relative; overflow: hidden;
-    }
-    .verdict-banner::before {
-      content: '';
-      position: absolute; inset: 0;
-      background-image: repeating-linear-gradient(
-        45deg, transparent, transparent 30px,
-        rgba(0, 0, 0, 0.05) 30px, rgba(0, 0, 0, 0.05) 31px);
-      pointer-events: none;
-    }
-    .verdict-inner {
-      max-width: 1400px; margin: 0 auto; padding: 0 2rem;
-      display: flex; align-items: center; justify-content: space-between;
-      flex-wrap: wrap; gap: 2rem; position: relative;
-    }
-    .verdict-label {
-      font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
-      letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.8;
-    }
-    .verdict-text {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(2.5rem, 6vw, 5rem); letter-spacing: -0.01em; line-height: 1;
-    }
-    .verdict-detail {
-      font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
-      border: 1px solid rgba(0,0,0,0.3); padding: 0.75rem 1.25rem; white-space: nowrap;
-    }
+    /* STRIP */
+    .wc26-strip { background: var(--pitch); color: var(--bg); padding: 2.5rem 0; position: relative; overflow: hidden; }
+    .wc26-strip::before { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(45deg, transparent, transparent 22px, rgba(0,0,0,0.05) 22px, rgba(0,0,0,0.05) 23px); }
+    .wc26-strip-in { position: relative; max-width: 1200px; margin: 0 auto; padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
+    .wc26-strip .lab { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.75; margin-bottom: 0.4rem; }
+    .wc26-strip .big { font-family: 'Archivo Black', sans-serif; font-size: clamp(1.6rem, 3.5vw, 2.8rem); text-transform: uppercase; line-height: 1; }
+    .wc26-strip .tag { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; border: 1.5px solid rgba(0,0,0,0.25); border-radius: 100px; padding: 0.6rem 1.1rem; white-space: nowrap; }
 
-    /* SECTIONS */
-    .section { padding: 8rem 0; position: relative; }
-    .section-inner { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
-    .section-label {
-      font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
-      color: var(--accent); letter-spacing: 0.2em; text-transform: uppercase;
-      margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem;
-    }
-    .section-label::before { content: ''; width: 24px; height: 1px; background: var(--accent); }
-    .section-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 400;
-      line-height: 1; letter-spacing: -0.01em; margin-bottom: 2rem;
-      max-width: 900px; text-transform: uppercase;
-    }
-    .section-lead {
-      font-size: 1.15rem; line-height: 1.7; color: var(--ink-muted);
-      max-width: 720px; margin-bottom: 2rem; font-weight: 300;
-    }
-    .section-lead strong { color: var(--ink); font-weight: 500; }
-    .section-lead em { color: var(--accent); font-style: normal; }
+    /* BLOCKS */
+    .wc26-block { padding: 5.5rem 0; }
+    .wc26-block.alt { background: var(--bg2); }
+    .wc26-kicker { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--pitch); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.6rem; }
+    .wc26-kicker::before { content: ''; width: 26px; height: 2px; background: var(--pitch); }
+    .wc26-title { font-family: 'Archivo Black', sans-serif; font-size: clamp(1.9rem, 4vw, 3.2rem); line-height: 1.05; text-transform: uppercase; letter-spacing: -0.01em; margin-bottom: 1.5rem; max-width: 850px; color: var(--ink); }
+    .wc26-text { font-size: 1.1rem; line-height: 1.7; color: var(--muted); max-width: 720px; margin-bottom: 1.2rem; font-weight: 300; }
+    .wc26-text strong { color: var(--ink); font-weight: 600; }
+    .wc26-text em { color: var(--pitch); font-style: normal; font-weight: 500; }
 
-    /* IMAGE FIGURE */
-    .figure {
-      margin: 3rem 0; border: 1px solid var(--line);
-      border-radius: 4px; overflow: hidden; background: var(--bg-card);
-    }
-    .figure img { width: 100%; display: block; }
-    .figure-caption {
-      padding: 1rem 1.5rem; font-size: 0.85rem; color: var(--ink-muted);
-      font-family: 'JetBrains Mono', monospace; border-top: 1px solid var(--line);
-    }
+    /* FIGURE */
+    .wc26-fig { margin: 2.5rem 0; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: var(--card); }
+    .wc26-fig img { width: 100%; display: block; }
+    .wc26-cap { padding: 0.9rem 1.3rem; font-size: 0.8rem; color: var(--faint); font-family: 'JetBrains Mono', monospace; border-top: 1px solid var(--line); }
 
-    /* SEUILS CARDS */
-    .seuils-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1px; background: var(--line); margin-top: 3rem;
-      border: 1px solid var(--line);
-    }
-    .seuil-card { background: var(--bg-card); padding: 2.5rem 2rem; }
-    .seuil-card .pts {
-      font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem;
-      letter-spacing: 0.05em; margin-bottom: 0.75rem; display: flex;
-      align-items: center; gap: 0.6rem;
-    }
-    .seuil-card .dot { width: 14px; height: 14px; border-radius: 50%; }
-    .seuil-card .big {
-      font-family: 'Bebas Neue', sans-serif; font-size: 3.5rem;
-      line-height: 1; margin-bottom: 0.5rem;
-    }
-    .seuil-card .desc { font-size: 0.9rem; color: var(--ink-muted); }
-    .green-txt { color: var(--green); }
-    .amber-txt { color: var(--amber); }
-    .red-txt { color: var(--red); }
+    /* SEUILS */
+    .wc26-seuils { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1.2rem; margin-top: 2.5rem; }
+    .wc26-seuil { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 1.8rem; position: relative; overflow: hidden; }
+    .wc26-seuil .bar { position: absolute; top: 0; left: 0; right: 0; height: 4px; }
+    .wc26-seuil .pts { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.8rem; text-transform: uppercase; }
+    .wc26-seuil .pct { font-family: 'Archivo Black', sans-serif; font-size: 3rem; line-height: 1; margin-bottom: 0.6rem; }
+    .wc26-seuil .d { font-size: 0.92rem; color: var(--muted); }
+    .wc26-green { color: var(--pitch); } .wc26-bg-green { background: var(--pitch); }
+    .wc26-gold { color: var(--gold); } .wc26-bg-gold { background: var(--gold); }
+    .wc26-red { color: var(--red); } .wc26-bg-red { background: var(--red); }
 
-    /* METHOD STEPS */
-    .steps { margin-top: 3rem; }
-    .step {
-      display: grid; grid-template-columns: 60px 1fr; gap: 1.5rem;
-      padding: 1.5rem 0; border-bottom: 1px solid var(--line); align-items: start;
-    }
-    .step:last-child { border-bottom: none; }
-    .step-num {
-      font-family: 'Bebas Neue', sans-serif; font-size: 2rem;
-      color: var(--accent); line-height: 1;
-    }
-    .step-content h4 {
-      font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem;
-      font-weight: 400; margin-bottom: 0.4rem; letter-spacing: 0.02em; text-transform: uppercase;
-    }
-    .step-content p { color: var(--ink-muted); font-size: 0.95rem; max-width: 700px; }
+    /* STEPS */
+    .wc26-steps { margin-top: 2.5rem; display: grid; gap: 1rem; }
+    .wc26-step { display: grid; grid-template-columns: 56px 1fr; gap: 1.3rem; align-items: start; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 1.5rem 1.6rem; transition: border-color 0.2s, transform 0.2s; }
+    .wc26-step:hover { border-color: rgba(33,209,119,0.4); transform: translateX(4px); }
+    .wc26-step .num { font-family: 'Archivo Black', sans-serif; font-size: 1.7rem; color: var(--pitch); line-height: 1; }
+    .wc26-step h4 { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.3rem; color: var(--ink); }
+    .wc26-step p { color: var(--muted); font-size: 0.95rem; font-weight: 300; }
 
-    /* DEBATE BOX */
-    .debate {
-      background: var(--bg-elevated); border-left: 3px solid var(--accent);
-      padding: 3rem 3.5rem; margin: 3rem 0; position: relative;
-    }
-    .debate h3 {
-      font-family: 'Bebas Neue', sans-serif; font-size: 2rem;
-      font-weight: 400; margin-bottom: 1rem; letter-spacing: 0.01em; text-transform: uppercase;
-    }
-    .debate p { color: var(--ink-muted); font-size: 1.05rem; line-height: 1.7; max-width: 760px; margin-bottom: 1rem; }
-    .debate p:last-child { margin-bottom: 0; }
-    .debate strong { color: var(--ink); font-weight: 500; }
+    /* DEBATE */
+    .wc26-debate { background: linear-gradient(135deg, var(--cardhi) 0%, var(--card) 100%); border: 1px solid var(--line); border-left: 4px solid var(--gold); border-radius: 14px; padding: 2.5rem 2.8rem; margin-top: 2.5rem; }
+    .wc26-debate h3 { font-family: 'Archivo Black', sans-serif; font-size: 1.5rem; text-transform: uppercase; margin-bottom: 1rem; color: var(--ink); }
+    .wc26-debate p { color: var(--muted); font-size: 1.02rem; line-height: 1.7; margin-bottom: 1rem; font-weight: 300; }
+    .wc26-debate p:last-child { margin-bottom: 0; }
+    .wc26-debate strong { color: var(--ink); font-weight: 600; }
 
     /* STACK */
-    .stack-grid { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 3rem; }
-    .stack-tag {
-      font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
-      padding: 0.625rem 1.25rem; border: 1px solid var(--line);
-      color: var(--ink-muted); transition: all 0.2s;
-    }
-    .stack-tag:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
+    .wc26-stack { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 2.5rem; }
+    .wc26-chip { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; padding: 0.6rem 1.1rem; border: 1px solid var(--line); border-radius: 100px; color: var(--muted); transition: all 0.2s; }
+    .wc26-chip:hover { border-color: var(--pitch); color: var(--pitch); }
 
     /* CTA */
-    .cta-section {
-      padding: 8rem 0; text-align: center; border-top: 1px solid var(--line);
-      background: linear-gradient(180deg, var(--bg) 0%, var(--bg-elevated) 100%);
-      position: relative; overflow: hidden;
-    }
-    .cta-section::before {
-      content: ''; position: absolute; inset: 0;
-      background: radial-gradient(circle at center, var(--accent-glow) 0%, transparent 60%);
-      pointer-events: none;
-    }
-    .cta-content { position: relative; max-width: 800px; margin: 0 auto; padding: 0 2rem; }
-    .cta-title {
-      font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.5rem, 5vw, 4rem);
-      font-weight: 400; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.01em;
-    }
-    .cta-subtitle { font-size: 1rem; color: var(--ink-muted); margin-bottom: 3rem; }
-    .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
-    .btn {
-      font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
-      padding: 1.125rem 2rem; text-decoration: none; text-transform: uppercase;
-      letter-spacing: 0.1em; transition: all 0.2s; display: inline-flex;
-      align-items: center; gap: 0.5rem; border: 1px solid transparent;
-    }
-    .btn-primary { background: var(--accent); color: var(--bg); font-weight: 600; }
-    .btn-primary:hover { background: var(--ink); transform: translateY(-2px); }
-    .btn-secondary { background: transparent; color: var(--ink); border: 1px solid var(--line); }
-    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+    .wc26-cta { padding: 5.5rem 0; text-align: center; border-top: 1px solid var(--line); background: var(--bg2); }
+    .wc26-cta h2 { font-family: 'Archivo Black', sans-serif; font-size: clamp(2rem, 4vw, 3rem); text-transform: uppercase; margin-bottom: 0.8rem; color: var(--ink); }
+    .wc26-cta p { color: var(--muted); margin-bottom: 2.5rem; font-weight: 300; }
+    .wc26-ctabtns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .wc26-btn { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; padding: 1.05rem 2rem; border-radius: 100px; text-decoration: none; text-transform: uppercase; letter-spacing: 0.08em; transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.5rem; border: 1px solid transparent; }
+    .wc26-btn1 { background: var(--pitch); color: var(--bg); font-weight: 600; }
+    .wc26-btn1:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(33,209,119,0.3); }
+    .wc26-btn2 { background: transparent; color: var(--ink); border-color: var(--line); }
+    .wc26-btn2:hover { border-color: var(--pitch); color: var(--pitch); }
 
     /* FOOTER */
-    .wc-footer {
-      padding: 3rem 2rem; border-top: 1px solid var(--line);
-      font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--ink-muted);
-    }
-    .footer-inner {
-      max-width: 1400px; margin: 0 auto; display: flex;
-      justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
-    }
-    .wc-footer a { color: var(--ink-muted); text-decoration: none; transition: color 0.2s; }
-    .wc-footer a:hover { color: var(--accent); }
+    .wc26-foot { padding: 2.5rem 2rem; border-top: 1px solid var(--line); font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--faint); }
+    .wc26-foot-in { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .wc26-foot a { color: var(--faint); text-decoration: none; transition: color 0.2s; }
+    .wc26-foot a:hover { color: var(--pitch); }
 
-    /* ANIMATIONS */
-    .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease, transform 0.8s ease; }
-    .fade-in.visible { opacity: 1; transform: translateY(0); }
-
-    /* RESPONSIVE */
-    @media (max-width: 768px) {
-      .section { padding: 5rem 0; }
-      .hero-inner { padding: 2rem 1.5rem; }
-      .hero-stats { gap: 1.5rem; margin-top: 3rem; }
-      .stat-block .number { font-size: 2.25rem; }
-      .verdict-text { font-size: 2.5rem; }
-      .debate { padding: 2rem 1.5rem; }
-      .step { grid-template-columns: 40px 1fr; gap: 1rem; }
-      .header-meta { display: none; }
+    @media (max-width: 720px) {
+      .wc26-hstats { grid-template-columns: 1fr; }
+      .wc26-meta { display: none; }
+      .wc26-debate { padding: 1.8rem 1.5rem; }
+      .wc26-step { grid-template-columns: 40px 1fr; gap: 1rem; }
     }
   </style>
 </head>
 <body>
+<div class="wc26-root">
 
-  <!-- HEADER -->
-  <header class="wc-header">
-    <div class="header-content">
-      <a href="../index.html" class="header-back">retour au portfolio</a>
-      <div class="header-meta">
-        <span class="dot"></span>
-        <span>kayou ba · sports analytics · 2026</span>
+  <div class="wc26-top">
+    <div class="wc26-top-in">
+      <a href="../index.html" class="wc26-back">retour au portfolio</a>
+      <div class="wc26-meta"><span class="wc26-pin">&#9679;</span> kayou ba · sports analytics</div>
+    </div>
+  </div>
+
+  <header class="wc26-hero">
+    <div class="wc26-lines"></div>
+    <div class="wc26-wrap wc26-hero-in">
+      <div class="wc26-badges">
+        <span class="wc26-badge">Étude de format</span>
+        <span class="wc26-hosts">
+          <span class="wc26-hostdot" style="background:#3b8cff;"></span>
+          <span class="wc26-hostdot" style="background:#e8463f;"></span>
+          <span class="wc26-hostdot" style="background:#21d177;"></span>
+          USA · CANADA · MEXIQUE 2026
+        </span>
+      </div>
+      <h1>Une seule victoire<br><span class="wc26-hl">peut suffire</span></h1>
+      <p class="wc26-lead">
+        Le premier Mondial à 48 équipes a un format inédit que personne ne maîtrise encore. J'ai simulé 50 000 phases de groupes pour répondre à une question concrète : combien de points faut-il pour se qualifier comme meilleur troisième ?
+      </p>
+      <div class="wc26-hstats">
+        <div class="wc26-hstat"><div class="n">50K</div><div class="l">phases de groupes simulées</div></div>
+        <div class="wc26-hstat"><div class="n">48</div><div class="l">équipes · 12 groupes</div></div>
+        <div class="wc26-hstat"><div class="n">8/12</div><div class="l">troisièmes repêchés</div></div>
       </div>
     </div>
   </header>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-inner">
-      <div class="hero-tag">étude de format · coupe du monde 2026</div>
-      <h1 class="hero-title">
-        Une seule victoire<br>
-        <span class="em">peut suffire.</span>
-      </h1>
-      <p class="hero-subtitle">
-        Le premier Mondial à 48 équipes a un format inédit que personne ne maîtrise encore. J'ai simulé 50 000 phases de groupes pour répondre à une question concrète : combien de points faut-il pour se qualifier comme meilleur troisième ?
-      </p>
-
-      <div class="hero-stats">
-        <div class="stat-block">
-          <div class="number">50 000</div>
-          <span class="label">phases de groupes simulées</span>
-        </div>
-        <div class="stat-block">
-          <div class="number">48</div>
-          <span class="label">équipes, 12 groupes</span>
-        </div>
-        <div class="stat-block">
-          <div class="number">8 / 12</div>
-          <span class="label">troisièmes repêchés</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- VERDICT -->
-  <div class="verdict-banner">
-    <div class="verdict-inner">
+  <div class="wc26-strip">
+    <div class="wc26-strip-in">
       <div>
-        <div class="verdict-label">le résultat en bref</div>
-        <div class="verdict-text">4 points suffisent. 3 points, pile ou face.</div>
+        <div class="lab">Le résultat en bref</div>
+        <div class="big">4 points suffisent. 3 points, pile ou face.</div>
       </div>
-      <div class="verdict-detail">50 000 simulations</div>
+      <div class="tag">50 000 simulations</div>
     </div>
   </div>
 
-  <!-- LE CONTEXTE -->
-  <section class="section">
-    <div class="section-inner">
-      <div class="section-label">le contexte</div>
-      <h2 class="section-title">Un format que personne n'a jamais vu.</h2>
-      <p class="section-lead">
+  <section class="wc26-block">
+    <div class="wc26-wrap">
+      <div class="wc26-kicker">Le contexte</div>
+      <h2 class="wc26-title">Un format que personne n'a jamais vu</h2>
+      <p class="wc26-text">
         La Coupe du Monde 2026 passe de 32 à 48 équipes, réparties en 12 groupes de 4. Les deux premiers de chaque groupe se qualifient, plus les <strong>8 meilleurs troisièmes</strong> sur les 12.
       </p>
-      <p class="section-lead">
-        Ce système de repêchage est inédit, et il change la donne pour les équipes des chapeaux inférieurs : finir troisième de son groupe n'est plus synonyme d'élimination. Mais alors, <em>combien de points faut-il viser</em> pour faire partie des repêchés ? C'est précisément la question que ce projet quantifie.
+      <p class="wc26-text">
+        Ce système de repêchage est inédit, et il change la donne pour les équipes des chapeaux inférieurs : finir troisième de son groupe n'est plus synonyme d'élimination. Mais alors, <em>combien de points faut-il viser</em> pour faire partie des repêchés ? C'est précisément ce que ce projet quantifie.
       </p>
     </div>
   </section>
 
-  <!-- LE RESULTAT -->
-  <section class="section">
-    <div class="section-inner">
-      <div class="section-label">le résultat</div>
-      <h2 class="section-title">Des seuils nets.</h2>
-      <p class="section-lead">
+  <section class="wc26-block alt">
+    <div class="wc26-wrap">
+      <div class="wc26-kicker">Le résultat</div>
+      <h2 class="wc26-title">Des seuils nets</h2>
+      <p class="wc26-text">
         En simulant 50 000 phases de groupes, la probabilité de qualification d'un troisième selon son nombre de points devient très claire.
       </p>
-
-      <div class="figure">
-        <img src="../assets/wc2026-seuil.png" alt="Graphique des seuils de qualification" />
-        <div class="figure-caption">// Probabilité de qualification d'un troisième selon ses points (50 000 simulations)</div>
+      <div class="wc26-fig">
+        <img src="../assets/wc2026-seuil.png" alt="Graphique des seuils de qualification des meilleurs troisièmes" />
+        <div class="wc26-cap">// Probabilité de qualification d'un troisième selon ses points · 50 000 simulations</div>
       </div>
-
-      <div class="seuils-grid">
-        <div class="seuil-card">
-          <div class="pts"><span class="dot" style="background: var(--green);"></span>4 POINTS</div>
-          <div class="big green-txt">~99 %</div>
-          <div class="desc">Une victoire et un nul. Qualification quasi assurée.</div>
+      <div class="wc26-seuils">
+        <div class="wc26-seuil">
+          <div class="bar wc26-bg-green"></div>
+          <div class="pts">4 points · 1 victoire + 1 nul</div>
+          <div class="pct wc26-green">99%</div>
+          <div class="d">Qualification quasi assurée. Le vrai objectif à viser.</div>
         </div>
-        <div class="seuil-card">
-          <div class="pts"><span class="dot" style="background: var(--amber);"></span>3 POINTS</div>
-          <div class="big amber-txt">~57 %</div>
-          <div class="desc">Une seule victoire. C'est environ pile ou face.</div>
+        <div class="wc26-seuil">
+          <div class="bar wc26-bg-gold"></div>
+          <div class="pts">3 points · 1 victoire</div>
+          <div class="pct wc26-gold">57%</div>
+          <div class="d">Environ pile ou face. Tout dépend des autres groupes.</div>
         </div>
-        <div class="seuil-card">
-          <div class="pts"><span class="dot" style="background: var(--red);"></span>2 POINTS</div>
-          <div class="big red-txt">~2 %</div>
-          <div class="desc">Deux nuls. Presque toujours synonyme d'élimination.</div>
+        <div class="wc26-seuil">
+          <div class="bar wc26-bg-red"></div>
+          <div class="pts">2 points · 2 nuls</div>
+          <div class="pct wc26-red">2%</div>
+          <div class="d">Presque toujours synonyme d'élimination.</div>
         </div>
       </div>
-
-      <p class="section-lead" style="margin-top: 3rem;">
-        La conclusion marquante : dans ce nouveau format, <strong>une seule victoire en trois matchs peut suffire</strong> à atteindre la phase à élimination directe d'une Coupe du Monde. C'est historiquement très faible, et ça résume bien l'esprit d'ouverture du format à 48.
+      <p class="wc26-text" style="margin-top: 2.5rem;">
+        La conclusion marquante : dans ce format, <strong>une seule victoire en trois matchs peut suffire</strong> à atteindre la phase à élimination directe d'une Coupe du Monde. C'est historiquement très faible, et ça résume bien l'esprit d'ouverture du tournoi à 48.
       </p>
     </div>
   </section>
 
-  <!-- LA METHODE -->
-  <section class="section">
-    <div class="section-inner">
-      <div class="section-label">la méthode</div>
-      <h2 class="section-title">Une simulation volontairement neutre.</h2>
-      <p class="section-lead">
-        Le but est d'étudier le <em>format</em>, pas de prédire qui gagne. Le modèle est donc volontairement simple et neutre : toutes les équipes sont traitées à égalité, avec des probabilités d'issue calées sur les fréquences historiques de la Coupe du Monde.
+  <section class="wc26-block">
+    <div class="wc26-wrap">
+      <div class="wc26-kicker">La méthode</div>
+      <h2 class="wc26-title">Une simulation volontairement neutre</h2>
+      <p class="wc26-text">
+        Le but est d'étudier le <em>format</em>, pas de prédire qui gagne. Le modèle est donc simple et neutre : toutes les équipes sont traitées à égalité, avec des probabilités d'issue calées sur les fréquences historiques de la Coupe du Monde.
       </p>
-
-      <div class="steps">
-        <div class="step">
-          <div class="step-num">01</div>
-          <div class="step-content">
-            <h4>Modèle de match</h4>
-            <p>Chaque match a une issue tirée selon les fréquences observées en Coupe du Monde : environ 38 % de victoires de chaque côté, 24 % de nuls.</p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-num">02</div>
-          <div class="step-content">
-            <h4>Phase de groupes</h4>
-            <p>On simule les 6 matchs de chaque groupe de 4, ce qui donne le classement final et identifie le troisième.</p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-num">03</div>
-          <div class="step-content">
-            <h4>Classement des troisièmes</h4>
-            <p>Les 12 troisièmes sont comparés, on garde les 8 meilleurs. Les égalités sont tranchées au hasard, comme le font la différence de buts et le tirage au sort dans le règlement FIFA.</p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-num">04</div>
-          <div class="step-content">
-            <h4>50 000 répétitions</h4>
-            <p>On recommence des dizaines de milliers de fois pour obtenir des probabilités stables et fiables.</p>
-          </div>
-        </div>
+      <div class="wc26-steps">
+        <div class="wc26-step"><div class="num">01</div><div><h4>Modèle de match</h4><p>Chaque match a une issue tirée selon les fréquences observées en Coupe du Monde : environ 38 % de victoires de chaque côté, 24 % de nuls.</p></div></div>
+        <div class="wc26-step"><div class="num">02</div><div><h4>Phase de groupes</h4><p>On simule les 6 matchs de chaque groupe de 4, ce qui donne le classement final et identifie le troisième.</p></div></div>
+        <div class="wc26-step"><div class="num">03</div><div><h4>Classement des troisièmes</h4><p>Les 12 troisièmes sont comparés, on garde les 8 meilleurs. Les égalités sont tranchées au hasard, comme le font la différence de buts et le tirage au sort dans le règlement FIFA.</p></div></div>
+        <div class="wc26-step"><div class="num">04</div><div><h4>50 000 répétitions</h4><p>On recommence des dizaines de milliers de fois pour obtenir des probabilités stables et fiables.</p></div></div>
       </div>
     </div>
   </section>
 
-  <!-- LE DEBAT -->
-  <section class="section">
-    <div class="section-inner">
-      <div class="section-label">la réflexion</div>
-      <h2 class="section-title">Et l'équité dans tout ça ?</h2>
-
-      <div class="debate">
+  <section class="wc26-block alt">
+    <div class="wc26-wrap">
+      <div class="wc26-kicker">La réflexion</div>
+      <h2 class="wc26-title">Et l'équité dans tout ça ?</h2>
+      <div class="wc26-debate">
         <h3>Un format ouvert, mais juste ?</h3>
         <p>
           Si une seule victoire peut suffire, c'est une formidable ouverture pour les petites nations. Mais ça soulève aussi une vraie question d'<strong>équité sportive</strong> : deux équipes à performance identique peuvent connaître des sorts différents selon le groupe qui leur a été tiré, et le système de repêchage des troisièmes crée des chemins inégaux vers les seizièmes.
@@ -500,42 +257,35 @@
     </div>
   </section>
 
-  <!-- STACK -->
-  <section class="section">
-    <div class="section-inner">
-      <div class="section-label">stack technique</div>
-      <h2 class="section-title">Python, simple et reproductible.</h2>
-      <div class="stack-grid">
-        <div class="stack-tag">Python</div>
-        <div class="stack-tag">NumPy</div>
-        <div class="stack-tag">pandas</div>
-        <div class="stack-tag">matplotlib</div>
-        <div class="stack-tag">Monte Carlo</div>
-        <div class="stack-tag">Jupyter</div>
-        <div class="stack-tag">pytest</div>
+  <section class="wc26-block">
+    <div class="wc26-wrap">
+      <div class="wc26-kicker">Stack technique</div>
+      <h2 class="wc26-title">Python, simple et reproductible</h2>
+      <div class="wc26-stack">
+        <span class="wc26-chip">Python</span>
+        <span class="wc26-chip">NumPy</span>
+        <span class="wc26-chip">pandas</span>
+        <span class="wc26-chip">matplotlib</span>
+        <span class="wc26-chip">Monte Carlo</span>
+        <span class="wc26-chip">Jupyter</span>
+        <span class="wc26-chip">pytest</span>
       </div>
     </div>
   </section>
 
-  <!-- CTA -->
-  <section class="cta-section">
-    <div class="cta-content">
-      <h2 class="cta-title">Voir le code.</h2>
-      <p class="cta-subtitle">Le notebook commenté, les modules Python et les tests, en open source.</p>
-      <div class="cta-buttons">
-        <a href="https://github.com/kayouba/cdm2026-troisiemes" target="_blank" class="btn btn-primary">
-          <i class="fab fa-github"></i> github →
-        </a>
-        <a href="../index.html#projects" class="btn btn-secondary">
-          <i class="fas fa-arrow-left"></i> retour aux projets
-        </a>
+  <section class="wc26-cta">
+    <div class="wc26-wrap">
+      <h2>Voir le code</h2>
+      <p>Le notebook commenté, les modules Python et les tests, en open source.</p>
+      <div class="wc26-ctabtns">
+        <a href="https://github.com/kayouba/cdm2026-troisiemes" target="_blank" class="wc26-btn wc26-btn1">GitHub →</a>
+        <a href="../index.html#projects" class="wc26-btn wc26-btn2">← Retour aux projets</a>
       </div>
     </div>
   </section>
 
-  <!-- FOOTER -->
-  <footer class="wc-footer">
-    <div class="footer-inner">
+  <footer class="wc26-foot">
+    <div class="wc26-foot-in">
       <div>© 2026 Kayou Ba · Format : règlement officiel FIFA</div>
       <div>
         <a href="https://kayouba.pro">portfolio</a> ·
@@ -545,18 +295,6 @@
     </div>
   </footer>
 
-  <script>
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) entry.target.classList.add('visible');
-      });
-    }, { threshold: 0.1 });
-
-    document.querySelectorAll('.step, .seuil-card, .stat-block, .debate, .figure').forEach(el => {
-      el.classList.add('fade-in');
-      observer.observe(el);
-    });
-  </script>
-
+</div>
 </body>
 </html>
