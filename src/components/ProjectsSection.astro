@@ -1,0 +1,120 @@
+---
+import type { ProjectsSectionContent } from '../content/types';
+import type { Locale, ProjectKey } from '../i18n/config';
+import { projectPath } from '../i18n/config';
+
+interface Props {
+  projects: ProjectsSectionContent;
+  locale: Locale;
+  liveLabel: string;
+  soonLabel: string;
+  codeLabel: string;
+}
+const { projects, locale, liveLabel, soonLabel, codeLabel } = Astro.props;
+---
+
+<section id="projects" class="section">
+  <div class="container">
+    <h2 class="section-heading">{projects.title}</h2>
+    <p class="section-intro">{projects.intro}</p>
+    <div class="projects-grid">
+      {projects.cards.map((card) => (
+        <article class:list={['project-card', { featured: card.featured }]}>
+          <div class="project-top">
+            <span class="project-emoji" aria-hidden="true">{card.emoji}</span>
+            <span class:list={['status-pill', card.status]}>
+              {card.status === 'live' ? liveLabel : soonLabel}
+            </span>
+          </div>
+          <h3>{card.title}</h3>
+          <p>{card.description}</p>
+          <div class="tag-row">
+            {card.tech.map((t) => <span class="tag">{t}</span>)}
+          </div>
+          <div class="project-links">
+            {card.status === 'live' ? (
+              <a class="btn btn-secondary" href={projectPath(locale, card.key as ProjectKey)}>
+                {card.linkLabel}
+              </a>
+            ) : (
+              <span class="btn btn-secondary disabled">{card.linkLabel}</span>
+            )}
+            {card.githubUrl && (
+              <a class="btn btn-ghost" href={card.githubUrl} target="_blank" rel="noopener">
+                {codeLabel}
+              </a>
+            )}
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+  .project-card {
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    transition: var(--transition);
+  }
+  .project-card:hover {
+    border-color: var(--color-border-strong);
+    transform: translateY(-3px);
+  }
+  .project-card.featured {
+    border-color: rgba(57, 135, 229, 0.35);
+  }
+  .project-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .project-emoji {
+    font-size: 1.6rem;
+  }
+  .status-pill {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+  }
+  .status-pill.live {
+    color: var(--status-good);
+    background: rgba(12, 163, 12, 0.12);
+  }
+  .status-pill.soon {
+    color: var(--status-warning);
+    background: rgba(250, 178, 25, 0.14);
+  }
+  .project-card h3 {
+    font-size: 1.2rem;
+  }
+  .project-card p {
+    color: var(--color-text-secondary);
+    font-size: 0.95rem;
+    flex-grow: 1;
+  }
+  .project-links {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .btn.disabled {
+    opacity: 0.5;
+    cursor: default;
+    pointer-events: none;
+  }
+</style>

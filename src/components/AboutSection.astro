@@ -1,0 +1,169 @@
+---
+import type { AboutContent } from '../content/types';
+
+interface Props {
+  about: AboutContent;
+}
+const { about } = Astro.props;
+---
+
+<section id="about" class="section">
+  <div class="container">
+    <h2 class="section-heading">{about.title}</h2>
+    <p class="section-intro">{about.intro}</p>
+
+    <div class="about-grid">
+      <div class="about-left">
+        <img src="/portrait.jpg" alt="Kayou Ba" class="portrait" width="220" height="220" />
+        <h3>Kayou Ba</h3>
+        <span class="badge">{about.badge}</span>
+        <p class="bio">{about.bio}</p>
+        <div class="stats">
+          {about.stats.map((s) => (
+            <div class="stat">
+              <span class="stat-number">{s.number}</span>
+              <span class="stat-label">{s.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="about-right">
+        <h3>{about.experienceTitle}</h3>
+        <div class="timeline">
+          {about.experience.map((entry) => (
+            <div class="timeline-entry">
+              <h4>{entry.org}</h4>
+              <p class="sub">{entry.role} · {entry.place}<br /><em>{entry.dates}</em></p>
+              <ul>
+                {entry.bullets.map((b) => <li>{b}</li>)}
+              </ul>
+              <div class="tag-row">
+                {entry.tags.map((t) => <span class="tag">{t}</span>)}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <h3>{about.educationTitle}</h3>
+        <div class="timeline">
+          {about.education.map((entry) => (
+            <div class="timeline-entry">
+              <h4>{entry.org}</h4>
+              <p class="sub">{entry.role} · {entry.place}<br /><em>{entry.dates}</em></p>
+              <ul>
+                {entry.bullets.map((b) => <li>{b}</li>)}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about-grid {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 3rem;
+  }
+  .about-left {
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 2rem;
+    text-align: center;
+    align-self: start;
+  }
+  .portrait {
+    width: 140px;
+    height: 140px;
+    border-radius: 999px;
+    object-fit: cover;
+    margin: 0 auto 1.25rem;
+    border: 2px solid var(--color-border-strong);
+  }
+  .about-left h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.6rem;
+  }
+  .badge {
+    display: inline-block;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--status-good);
+    background: rgba(12, 163, 12, 0.12);
+    padding: 0.3rem 0.8rem;
+    border-radius: 999px;
+    margin-bottom: 1.25rem;
+  }
+  .bio {
+    color: var(--color-text-secondary);
+    font-size: 0.92rem;
+    text-align: left;
+    margin-bottom: 1.75rem;
+  }
+  .stats {
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid var(--color-border);
+    padding-top: 1.25rem;
+  }
+  .stat {
+    display: flex;
+    flex-direction: column;
+  }
+  .stat-number {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--color-accent-hover);
+  }
+  .stat-label {
+    font-size: 0.72rem;
+    color: var(--color-text-muted);
+  }
+
+  .about-right h3 {
+    font-size: 1.2rem;
+    margin: 2.5rem 0 1.25rem;
+  }
+  .about-right h3:first-child {
+    margin-top: 0;
+  }
+  .timeline-entry {
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 1.5rem 1.75rem;
+    margin-bottom: 1.25rem;
+  }
+  .timeline-entry h4 {
+    font-size: 1.05rem;
+    margin-bottom: 0.35rem;
+  }
+  .sub {
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+    margin-bottom: 0.85rem;
+  }
+  .timeline-entry ul {
+    list-style: none;
+    color: var(--color-text-secondary);
+    font-size: 0.92rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin-bottom: 1rem;
+  }
+  .timeline-entry ul li::before {
+    content: '— ';
+    color: var(--color-text-muted);
+  }
+
+  @media (max-width: 860px) {
+    .about-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

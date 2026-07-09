@@ -1,0 +1,42 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Hero from '../../components/Hero.astro';
+import ProjectsSection from '../../components/ProjectsSection.astro';
+import AboutSection from '../../components/AboutSection.astro';
+import SkillsSection from '../../components/SkillsSection.astro';
+import CertificationsSection from '../../components/CertificationsSection.astro';
+import CvSection from '../../components/CvSection.astro';
+import ContactSection from '../../components/ContactSection.astro';
+import { siteEn } from '../../content/site.en';
+import { ui } from '../../content/ui';
+
+const locale = 'en' as const;
+const t = ui[locale];
+---
+
+<BaseLayout
+  locale={locale}
+  title={siteEn.meta.title}
+  description={siteEn.meta.description}
+  keywords={siteEn.meta.keywords}
+  nav={siteEn.nav}
+  footer={siteEn.footer}
+  altHref="/"
+  canonicalPath="/en/"
+>
+  <Hero hero={siteEn.hero} />
+  <main>
+    <ProjectsSection
+      projects={siteEn.projects}
+      locale={locale}
+      liveLabel={t.live}
+      soonLabel={t.soon}
+      codeLabel={t.code}
+    />
+    <AboutSection about={siteEn.about} />
+    <SkillsSection skills={siteEn.skills} />
+    <CertificationsSection certifications={siteEn.certifications} />
+    <CvSection cv={siteEn.cv} />
+    <ContactSection contact={siteEn.contact} />
+  </main>
+</BaseLayout>

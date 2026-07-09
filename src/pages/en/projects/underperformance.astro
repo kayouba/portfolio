@@ -1,0 +1,158 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ProjectHero from '../../../components/ProjectHero.astro';
+import { siteEn } from '../../../content/site.en';
+import { underperformanceEn as p } from '../../../content/projects/underperformance.en';
+import { ui } from '../../../content/ui';
+
+const locale = 'en' as const;
+const t = ui[locale].charts;
+const seriesColor: Record<string, string> = { missed: 'var(--series-1)', scored: 'var(--series-2)' };
+const seriesLabel: Record<string, string> = { missed: t.missed, scored: t.scored };
+---
+
+<BaseLayout
+  locale={locale}
+  title={`${p.title} | Kayou Ba`}
+  description={p.subtitle}
+  nav={siteEn.nav}
+  footer={siteEn.footer}
+  altHref="/projets/sous-performance/"
+  canonicalPath="/en/projects/underperformance/"
+>
+  <ProjectHero
+    backLabel={ui[locale].back}
+    backHref="/en/#projects"
+    eyebrow={p.eyebrow}
+    title={p.title}
+    subtitle={p.subtitle}
+    stats={p.heroStats.map((s) => ({ value: s.value, label: s.label }))}
+  />
+
+  <main class="container">
+    <div class="verdict-banner">
+      <span class="verdict-label">{p.verdict.label}</span>
+      <span class="verdict-value">{p.verdict.value}</span>
+      <span class="verdict-detail">{p.verdict.detail}</span>
+    </div>
+
+    <section class="project-section">
+      <span class="kicker">{p.problem.title}</span>
+      <h2>{p.problem.heading}</h2>
+      {p.problem.paragraphs.map((para) => <p>{para}</p>)}
+    </section>
+
+    <section class="project-section">
+      <span class="kicker">{p.xg.title}</span>
+      <h2>{p.xg.heading}</h2>
+      <div class="xg-grid">
+        {p.xg.cards.map((c) => (
+          <div class="xg-card">
+            <h3>{c.title}</h3>
+            <p>{c.text}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="project-section">
+      <span class="kicker">{p.method.title}</span>
+      <h2>{p.method.heading}</h2>
+      <p>{p.method.intro}</p>
+      <div class="step-grid">
+        {p.method.steps.map((step, i) => (
+          <div class="step-card">
+            <span class="step-number">{String(i + 1).padStart(2, '0')}</span>
+            <h3>{step.title}</h3>
+            <p>{step.text}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="project-section">
+      <span class="kicker">{p.findings.title}</span>
+      <h2>{p.findings.heading}</h2>
+
+      <div class="finding-list">
+        {p.findings.items.map((item, i) => (
+          <div class="finding-card">
+            <span class="finding-number">Finding {i + 1}</span>
+            <h3>{item.title}</h3>
+            <p>{item.text}</p>
+
+            {item.title === p.findings.items[0].title && (
+              <div class="grouped-chart">
+                <div class="chart-legend">
+                  <span class="chart-legend-item"><span class="chart-swatch" style="background:var(--series-1)"></span>{t.missed}</span>
+                  <span class="chart-legend-item"><span class="chart-swatch" style="background:var(--series-2)"></span>{t.scored}</span>
+                </div>
+                {p.findings.bigChanceBars.groups.map((group) => (
+                  <div class="chart-group">
+                    <div class="chart-group-label">{group.label}</div>
+                    <div class="chart-group-bars">
+                      {group.bars.map((bar) => (
+                        <div class="gbar-row">
+                          <span class="gbar-row-label">{seriesLabel[bar.series]}</span>
+                          <div class="chart-track">
+                            <div class="chart-fill" style={`width:${bar.value * 4}%; background:${seriesColor[bar.series]}`}></div>
+                          </div>
+                          <span class="chart-value">{bar.value}%</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+                <p class="chart-caption">{p.findings.bigChanceBars.caption}</p>
+              </div>
+            )}
+
+            {item.stat && (
+              <div class="mini-stats">
+                <div class="mini-stat">
+                  <span class="mini-stat-value">{item.stat.value}</span>
+                  <span class="mini-stat-label">{item.stat.label}</span>
+                </div>
+              </div>
+            )}
+
+            {item.tally && (
+              <div class="mini-stats">
+                {item.tally.map((tl) => (
+                  <div class="mini-stat">
+                    <span class="mini-stat-value">{tl.value}</span>
+                    <span class="mini-stat-label">{tl.label}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {item.compare && (
+              <div class="mini-stats">
+                {item.compare.map((c) => (
+                  <div class="mini-stat">
+                    <span class="mini-stat-value">{c.value}</span>
+                    <span class="mini-stat-label">{c.label}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="project-section">
+      <span class="kicker">{p.stackTitle}</span>
+      <div class="tag-row">
+        {p.stack.map((s) => <span class="tag">{s}</span>)}
+      </div>
+      <p class="chart-caption">{p.source}</p>
+    </section>
+
+    <div class="project-cta">
+      <a class="btn btn-primary" href={p.githubUrl} target="_blank" rel="noopener">{p.ctaLabel}</a>
+      <a class="btn btn-secondary" href="/en/#projects">{ui[locale].back}</a>
+    </div>
+  </main>
+</BaseLayout>

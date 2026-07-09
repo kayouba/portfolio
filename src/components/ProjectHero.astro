@@ -1,0 +1,84 @@
+---
+interface Props {
+  backLabel: string;
+  backHref: string;
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+  stats: { value: string; label: string }[];
+  accent?: string;
+}
+const { backLabel, backHref, eyebrow, title, subtitle, stats, accent = 'var(--color-accent)' } = Astro.props;
+---
+
+<section class="project-hero">
+  <div class="container">
+    <a href={backHref} class="back-link">&larr; {backLabel}</a>
+    <span class="eyebrow" style={`color:${accent}`}>{eyebrow}</span>
+    <h1>{title}</h1>
+    <p class="subtitle">{subtitle}</p>
+    <div class="hero-stats">
+      {stats.map((s) => (
+        <div class="hero-stat">
+          <span class="hero-stat-value">{s.value}</span>
+          <span class="hero-stat-label">{s.label}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .project-hero {
+    padding: 3rem 0 3.5rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .back-link {
+    display: block;
+    width: fit-content;
+    font-size: 0.88rem;
+    color: var(--color-text-muted);
+    margin-bottom: 1.75rem;
+  }
+  .back-link:hover {
+    color: var(--color-text);
+  }
+  .eyebrow {
+    display: inline-block;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .project-hero h1 {
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    max-width: 820px;
+    margin-bottom: 1rem;
+  }
+  .subtitle {
+    color: var(--color-text-secondary);
+    font-size: 1.1rem;
+    max-width: 680px;
+    margin-bottom: 2.5rem;
+  }
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1.5rem;
+    max-width: 640px;
+  }
+  .hero-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+  .hero-stat-value {
+    font-size: 1.6rem;
+    font-weight: 800;
+  }
+  .hero-stat-label {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+  }
+</style>

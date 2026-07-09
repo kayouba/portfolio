@@ -1,0 +1,42 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import ProjectsSection from '../components/ProjectsSection.astro';
+import AboutSection from '../components/AboutSection.astro';
+import SkillsSection from '../components/SkillsSection.astro';
+import CertificationsSection from '../components/CertificationsSection.astro';
+import CvSection from '../components/CvSection.astro';
+import ContactSection from '../components/ContactSection.astro';
+import { siteFr } from '../content/site.fr';
+import { ui } from '../content/ui';
+
+const locale = 'fr' as const;
+const t = ui[locale];
+---
+
+<BaseLayout
+  locale={locale}
+  title={siteFr.meta.title}
+  description={siteFr.meta.description}
+  keywords={siteFr.meta.keywords}
+  nav={siteFr.nav}
+  footer={siteFr.footer}
+  altHref="/en/"
+  canonicalPath="/"
+>
+  <Hero hero={siteFr.hero} />
+  <main>
+    <ProjectsSection
+      projects={siteFr.projects}
+      locale={locale}
+      liveLabel={t.live}
+      soonLabel={t.soon}
+      codeLabel={t.code}
+    />
+    <AboutSection about={siteFr.about} />
+    <SkillsSection skills={siteFr.skills} />
+    <CertificationsSection certifications={siteFr.certifications} />
+    <CvSection cv={siteFr.cv} />
+    <ContactSection contact={siteFr.contact} />
+  </main>
+</BaseLayout>
