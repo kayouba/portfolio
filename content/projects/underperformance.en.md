@@ -18,7 +18,9 @@ links:
   github: "https://github.com/kayouba/football-underperformance"
 ---
 
-"If you don't score, you get scored on." Commentators repeat it after every missed chance, as if it were a law of physics. Yet nobody seemed to have seriously tested it — so I did: 70,399 shots, 2,796 matches, 10 competitions, from 1958 to 2024, using StatsBomb's open data.
+"If you don't score, you get scored on." We've all heard it so many times — on the pitch, in front of the TV, in the locker room — that most of us just absorbed it as fact, myself included, without ever really questioning it. One day I actually did: what if it's just a collective legend nobody ever checked?
+
+Commentators repeat it after every missed chance, as if it were a law of physics. Yet nobody seemed to have seriously tested it — so I did: 70,399 shots, 2,796 matches, 10 competitions, from 1958 to 2024, using StatsBomb's open data.
 
 A single statistical test can mislead. I put this cliché through seven, each designed to be hard to pass by chance: an event study on the concede rate after a missed chance, stratification by match state, a 10,000-permutation test, logistic regression with match-clustered standard errors, out-of-sample cross-validation, and a 500-simulation Bernoulli null model.
 

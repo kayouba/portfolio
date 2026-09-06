@@ -18,7 +18,9 @@ links:
   github: "https://github.com/kayouba/football-underperformance"
 ---
 
-« Si tu ne marques pas, tu encaisses. » Le commentateur le répète après chaque occasion manquée, comme une loi physique du football. Personne, pourtant, ne semblait l'avoir sérieusement vérifié — alors je m'y suis mis : 70 399 tirs, 2 796 matchs, 10 compétitions, de 1958 à 2024, données ouvertes StatsBomb.
+« Si tu ne marques pas, tu encaisses. » On l'a tellement entendu — sur le terrain, devant la télé, dans les vestiaires — qu'on a fini par l'intégrer comme une évidence, moi y compris, sans jamais vraiment se poser la question. Un jour, je me la suis posée pour de bon : et si ce n'était qu'une légende collective, jamais vérifiée ?
+
+Le commentateur le répète après chaque occasion manquée, comme une loi physique du football. Personne, pourtant, ne semblait l'avoir sérieusement testée — alors je m'y suis mis : 70 399 tirs, 2 796 matchs, 10 compétitions, de 1958 à 2024, données ouvertes StatsBomb.
 
 Un seul test statistique peut mentir. J'en ai fait passer sept à cet adage, conçus pour être difficiles à satisfaire par hasard : event study sur le taux de but concédé après une occasion manquée, stratification par état du score, test de permutation à 10 000 tirages, régression logistique avec erreurs clusterisées par match, validation croisée hors échantillon, et un modèle nul de Bernoulli à 500 simulations.
 
