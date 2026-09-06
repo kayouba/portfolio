@@ -1,0 +1,149 @@
+{
+  "meta": {
+    "title": "Kayou Ba — Data Analyst & Developer | Portfolio",
+    "description": "Portfolio of Kayou Ba, Data Analyst and developer specialized in Python, SQL, statistical analysis and web development. Passionate about data applied to sport.",
+    "keywords": "Kayou Ba, Data Analyst, Data Scientist, Developer, Python, SQL, Sports Analytics, Portfolio, Bordeaux, MIAGE"
+  },
+  "nav": {
+    "brand": "Kayou Ba",
+    "projects": "Projects",
+    "about": "About",
+    "skills": "Skills",
+    "experience": "Experience",
+    "contact": "Contact",
+    "langSwitch": "FR",
+    "menuLabel": "Menu"
+  },
+  "hero": {
+    "eyebrow": "Bordeaux, France",
+    "name": "Kayou Ba",
+    "roles": ["Data Analyst", "Full-Stack Developer", "Sports Analytics"],
+    "pitch": "I analyze data and build the tools that put it to work — with a real appetite for data applied to sport.",
+    "ctaPrimary": "Get in touch",
+    "ctaSecondary": "Download my resume",
+    "signals": [
+      { "label": "MSc MIAGE", "value": "University of Bordeaux" },
+      { "label": "TOEIC 985/990", "value": "C1 English" },
+      { "label": "Available", "value": "immediately" }
+    ]
+  },
+  "projects": {
+    "eyebrow": "Projects",
+    "title": "Three questions, three angles on data",
+    "intro": "Statistical simulation, sports-performance analysis, decision-support tooling — the same thread runs through all three: data applied to sport.",
+    "readMore": "Read the write-up",
+    "visitDemo": "Visit the dashboard",
+    "numberPrefix": "Project",
+    "draftBadge": "Write-up coming soon",
+    "teasers": [],
+    "soonCard": {
+      "title": "Power BI Dashboard",
+      "description": "Interactive visualization of a public dataset built for decision-making: dynamic KPIs, filters, and predictive views.",
+      "tech": ["Power BI", "DAX", "ETL"],
+      "status": "Coming soon"
+    }
+  },
+  "about": {
+    "eyebrow": "About",
+    "title": "MIAGE graduate, trained by production",
+    "badge": "Available immediately",
+    "bio": "I graduated from the MIAGE Master's program at the University of Bordeaux (2025), specializing in data analysis, automation, and software development. My apprenticeship at Sopra Steria and international stint at CMA CGM taught me to ship things that hold up in production — not just in a notebook.",
+    "stats": [
+      { "value": "18", "unit": "mo", "label": "in apprenticeship" },
+      { "value": "3", "unit": "", "label": "published data projects" },
+      { "value": "985", "unit": "/990", "label": "TOEIC score" }
+    ]
+  },
+  "experience": {
+    "eyebrow": "Experience",
+    "title": "Background",
+    "items": [
+      {
+        "org": "Sopra Steria",
+        "role": "Apprentice Software Engineer / Developer",
+        "place": "Bordeaux, France",
+        "dates": "May 2023 – September 2025",
+        "bullets": [
+          "Built and maintained business-critical web applications, front and back end",
+          "Maintained 80+ VBA automation applications",
+          "Set up automated testing with UiPath",
+          "Worked within an Agile / Scrum team"
+        ],
+        "tags": ["Java", "Angular", "Python", "VBA", "UiPath"]
+      },
+      {
+        "org": "CMA CGM",
+        "role": "Assistant Project Manager",
+        "place": "Nouakchott, Mauritania",
+        "dates": "April 2023 – July 2023",
+        "bullets": [
+          "Rolled out an electronic payment solution",
+          "Digitized client-facing processes",
+          "Analyzed data to support market-share growth"
+        ],
+        "tags": ["Data Analysis", "Project Management", "FinTech"]
+      },
+      {
+        "org": "MSc MIAGE — University of Bordeaux",
+        "role": "IT methods applied to business management",
+        "place": "Bordeaux",
+        "dates": "2023 – 2025",
+        "bullets": [
+          "Stochastic processes, simulation, databases, statistics, OOP",
+          "Operations research, project management, machine learning, big data, business intelligence"
+        ],
+        "tags": []
+      }
+    ]
+  },
+  "skills": {
+    "eyebrow": "Skills",
+    "title": "The tools, from raw data to production",
+    "categories": [
+      {
+        "title": "Data & ML",
+        "tags": ["Python", "Pandas", "NumPy", "scikit-learn", "SQL", "Statistics", "Machine Learning", "Power BI"]
+      },
+      {
+        "title": "Development",
+        "tags": ["Angular", "TypeScript", "Java", "Spring Boot", "VBA", "HTML / CSS", "JavaScript"]
+      },
+      {
+        "title": "Automation",
+        "tags": ["UiPath (RPA)", "Advanced VBA / Excel", "Automated testing"]
+      },
+      {
+        "title": "Tools & Cloud",
+        "tags": ["Git & GitHub", "Jupyter", "Agile / Scrum", "Jira", "Vercel", "Streamlit"]
+      }
+    ]
+  },
+  "certifications": {
+    "eyebrow": "Certifications",
+    "title": "Certifications earned",
+    "items": [
+      { "title": "MSc MIAGE", "detail": "University of Bordeaux — 2025" },
+      { "title": "TOEIC 985/990", "detail": "C1 level — professional English" },
+      { "title": "Duolingo English Test", "detail": "Score: 135/160" }
+    ]
+  },
+  "contact": {
+    "eyebrow": "Contact",
+    "title": "Let's talk",
+    "intro": "Available immediately for new opportunities — Data Scientist, Data Analyst, Software/Full-Stack Engineer, Business Analyst, RPA/Automation Engineer.",
+    "email": "kayouba818@gmail.com",
+    "linkedin": "linkedin.com/in/kayouba",
+    "linkedinUrl": "https://www.linkedin.com/in/kayouba",
+    "github": "github.com/kayouba",
+    "githubUrl": "https://github.com/kayouba",
+    "ctaButton": "Send an email"
+  },
+  "footer": {
+    "text": "© 2026 Kayou Ba — Data Analyst & Developer"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "toggle": "Toggle theme"
+  }
+}

@@ -1,7 +1,14 @@
 node_modules
-dist
-.astro
+.next
+out
+build
+.velite
 .env
 .env.*
+.env*.local
+!.env.example
 .DS_Store
 .playwright-mcp
+next-env.d.ts
+*.tsbuildinfo
+public/static
