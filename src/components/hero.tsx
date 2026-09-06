@@ -36,6 +36,15 @@ export async function Hero() {
         >
           {t('ctaSecondary')}
         </a>
+        <a
+          href="#projects"
+          className="arrow-link-down link-underline inline-flex items-center gap-1.5 self-center px-2 font-mono text-[0.82rem] text-sub hover:text-ink"
+        >
+          {t('jumpToProjects')}
+          <span className="arrow-glyph" aria-hidden="true">
+            ↓
+          </span>
+        </a>
       </div>
 
       <dl className="mt-12 grid grid-cols-1 gap-px overflow-hidden rounded-sm border border-border bg-border sm:grid-cols-3">

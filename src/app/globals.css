@@ -133,6 +133,21 @@ button:focus-visible,
   }
 }
 
+/* Printing (or any full-page capture) doesn't scroll the page, so
+   scroll-linked reveal animations never reach their "entered" state —
+   force the resting, fully-visible frame instead. */
+@media print {
+  .reveal {
+    opacity: 1 !important;
+    animation: none !important;
+    transform: none !important;
+  }
+  .reading-progress,
+  header.site-header {
+    animation: none !important;
+  }
+}
+
 @keyframes reveal-in {
   from {
     opacity: 0;
@@ -187,6 +202,10 @@ button:focus-visible,
 .arrow-link-left:hover .arrow-glyph,
 .arrow-link-left:focus-visible .arrow-glyph {
   transform: translateX(-3px);
+}
+.arrow-link-down:hover .arrow-glyph,
+.arrow-link-down:focus-visible .arrow-glyph {
+  transform: translateY(3px);
 }
 
 @media (prefers-reduced-motion: reduce) {

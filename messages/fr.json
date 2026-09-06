@@ -21,6 +21,7 @@
     "pitch": "J'analyse des données et je construis les outils qui les exploitent — avec un vrai goût pour la donnée appliquée au sport.",
     "ctaPrimary": "Me contacter",
     "ctaSecondary": "Télécharger mon CV",
+    "jumpToProjects": "Voir mes projets",
     "signals": [
       { "label": "Master MIAGE", "value": "Université de Bordeaux" },
       { "label": "TOEIC 985/990", "value": "Anglais C1" },
@@ -64,8 +65,8 @@
         "place": "Bordeaux",
         "dates": "Mai 2023 – Septembre 2025",
         "bullets": [
-          "Développement d'applications web métier, front et back",
-          "Maintenance de plus de 80 applications VBA d'automatisation",
+          "Développement full-stack d'applications web critiques pour l'industrie de l'énergie (client EDF), du front au back",
+          "Maintenance de plus de 80 applications VBA d'automatisation, dans le cadre d'une TMA (tierce maintenance applicative)",
           "Mise en place de tests automatisés avec UiPath",
           "Travail en méthodologie Agile / Scrum"
         ],

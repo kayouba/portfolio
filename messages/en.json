@@ -21,6 +21,7 @@
     "pitch": "I analyze data and build the tools that put it to work — with a real appetite for data applied to sport.",
     "ctaPrimary": "Get in touch",
     "ctaSecondary": "Download my resume",
+    "jumpToProjects": "See my projects",
     "signals": [
       { "label": "MSc MIAGE", "value": "University of Bordeaux" },
       { "label": "TOEIC 985/990", "value": "C1 English" },
@@ -64,8 +65,8 @@
         "place": "Bordeaux, France",
         "dates": "May 2023 – September 2025",
         "bullets": [
-          "Built and maintained business-critical web applications, front and back end",
-          "Maintained 80+ VBA automation applications",
+          "Full-stack development of business-critical web applications for the energy industry (EDF), front to back",
+          "Maintained 80+ VBA automation applications as part of an ongoing application-maintenance contract (TMA)",
           "Set up automated testing with UiPath",
           "Worked within an Agile / Scrum team"
         ],
