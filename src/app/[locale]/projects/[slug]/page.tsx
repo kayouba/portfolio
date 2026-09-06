@@ -93,7 +93,7 @@ export default async function ProjectPage({
             </a>
           )}
 
-          <div className="reveal mt-10 overflow-hidden rounded-sm border border-border">
+          <div className="figure-frame reveal mt-10">
             <Image
               src={project.image}
               alt={project.imageAlt}
@@ -154,7 +154,7 @@ export default async function ProjectPage({
               <div className="mt-7 flex flex-col gap-10">
                 {project.figures.map((figure, i) => (
                   <figure key={i} className="reveal">
-                    <div className="overflow-hidden rounded-sm border border-border">
+                    <div className="figure-frame">
                       <Image
                         src={figure.image}
                         alt={figure.imageAlt}

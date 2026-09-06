@@ -84,6 +84,17 @@ button:focus-visible,
   font-variant-numeric: tabular-nums;
 }
 
+/* Charts/figures are static exports with a light, print-style background —
+   framing them in a fixed light mat (never the dark-mode surface) reads as
+   "a printed figure on the page" instead of a stray white box breaking the
+   dark theme. The mat color stays the same in both themes on purpose. */
+.figure-frame {
+  background: #ede4cd;
+  border: 1px solid #c3b895;
+  border-radius: 2px;
+  padding: clamp(0.75rem, 2.5vw, 1.75rem);
+}
+
 .reading-progress {
   display: none;
   position: fixed;

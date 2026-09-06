@@ -46,7 +46,7 @@ export async function ProjectsSection() {
                 ))}
               </div>
 
-              <div className="mt-8 overflow-hidden rounded-sm border border-border">
+              <div className="figure-frame mt-8">
                 <Image
                   src={project.image}
                   alt={project.imageAlt}
