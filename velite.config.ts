@@ -24,6 +24,34 @@ const projects = defineCollection({
         demo: s.string().optional(),
       }),
       body: s.markdown(),
+      methodTitle: s.string().optional(),
+      methodSteps: s
+        .array(
+          s.object({
+            title: s.string(),
+            text: s.string(),
+          })
+        )
+        .optional(),
+      extraStatsTitle: s.string().optional(),
+      extraStats: s
+        .array(
+          s.object({
+            value: s.string(),
+            label: s.string(),
+          })
+        )
+        .optional(),
+      figuresTitle: s.string().optional(),
+      figures: s
+        .array(
+          s.object({
+            image: s.image(),
+            imageAlt: s.string(),
+            caption: s.string().optional(),
+          })
+        )
+        .optional(),
     })
     .transform((data) => ({
       ...data,

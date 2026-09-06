@@ -109,6 +109,69 @@ export default async function ProjectPage({
             dangerouslySetInnerHTML={{ __html: project.body }}
           />
 
+          {project.methodSteps && project.methodSteps.length > 0 && (
+            <div className="reveal mt-14 border-t border-border pt-10">
+              {project.methodTitle && (
+                <h2 className="font-display text-[clamp(1.5rem,2.6vw,2rem)] leading-tight">{project.methodTitle}</h2>
+              )}
+              <ol className="mt-7 grid grid-cols-1 gap-5 sm:grid-cols-2">
+                {project.methodSteps.map((step, i) => (
+                  <li key={step.title} className="rounded-sm border border-border bg-surface px-5 py-5">
+                    <span className="tabular-nums mb-3 flex h-7 w-7 items-center justify-center rounded-full border border-border bg-bg font-mono text-[0.78rem] font-bold text-accent">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <h3 className="text-[0.98rem] font-semibold text-ink">{step.title}</h3>
+                    <p className="mt-1.5 text-[0.9rem] leading-relaxed text-ink/75">{step.text}</p>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          )}
+
+          {project.extraStats && project.extraStats.length > 0 && (
+            <div className="reveal mt-14 border-t border-border pt-10">
+              {project.extraStatsTitle && (
+                <h2 className="font-display text-[clamp(1.5rem,2.6vw,2rem)] leading-tight">{project.extraStatsTitle}</h2>
+              )}
+              <div className="mt-7 grid grid-cols-1 gap-px overflow-hidden rounded-sm border border-border bg-border sm:grid-cols-3">
+                {project.extraStats.map((stat) => (
+                  <div key={stat.label} className="bg-surface px-5 py-4">
+                    <div className="tabular-nums font-mono text-[clamp(1.5rem,3vw,2rem)] font-bold leading-none text-accent">
+                      {stat.value}
+                    </div>
+                    <div className="mt-2 font-mono text-[0.68rem] uppercase tracking-wide text-sub">{stat.label}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {project.figures && project.figures.length > 0 && (
+            <div className="mt-14 border-t border-border pt-10">
+              {project.figuresTitle && (
+                <h2 className="reveal font-display text-[clamp(1.5rem,2.6vw,2rem)] leading-tight">{project.figuresTitle}</h2>
+              )}
+              <div className="mt-7 flex flex-col gap-10">
+                {project.figures.map((figure, i) => (
+                  <figure key={i} className="reveal">
+                    <div className="overflow-hidden rounded-sm border border-border">
+                      <Image
+                        src={figure.image}
+                        alt={figure.imageAlt}
+                        placeholder="blur"
+                        className="h-auto w-full"
+                        sizes="(min-width: 768px) 768px, 100vw"
+                      />
+                    </div>
+                    {figure.caption && (
+                      <figcaption className="mt-3 max-w-[65ch] text-[0.88rem] leading-relaxed text-sub">{figure.caption}</figcaption>
+                    )}
+                  </figure>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-border pt-8">
             <div className="flex flex-wrap gap-2">
               {project.stack.map((tag) => (
